@@ -1,0 +1,20 @@
+
+server:
+  port: 8080
+  
+jsondoc:
+  version: 1.0
+  basePath: http://localhost:8080
+  packages[0]: com.pikaso.home.cinemanote.view
+  packages[1]: com.pikaso.home.cinemanote.service
+
+spring:
+  datasource:
+    url: jdbc:h2:file:d:/temp/cinemanote/db/cinemanote.database;AUTO_SERVER=TRUE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa.hibernate:
+    ddl-auto: none
+    naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
+  h2.console.enabled: true

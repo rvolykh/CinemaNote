@@ -1,0 +1,234 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: pikaso
+      changes:
+        - createTable:
+            tableName: film
+            columns:
+              - column:
+                  name: film_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title_eng
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: genre_id
+                  type: bigint
+              - column:
+                  name: release_date
+                  type: date
+              - column:
+                  name: description_eng
+                  type: varchar(2000)
+              - column:
+                  name: user_id
+                  type: bigint
+              - column:
+                  name: confirmed
+                  type: boolean
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: language
+                  type: varchar(2)
+                  defaultValue: EN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(20)
+                  defaultValue: user
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: user_film
+            columns:
+              - column:
+                  name: film_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false 
+              - column:
+                  name: revision_date
+                  type: date
+              - column:
+                  name: message
+                  type: varchar(2000)
+              - column:
+                  name: favorite
+                  type: boolean
+        - createTable:
+            tableName: genre
+            columns:
+              - column:
+                  name: genre_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name_eng
+                  type: varchar(50)
+        - createTable:
+            tableName: loc_genre
+            columns:
+              - column:
+                  name: genre_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: language
+                  type: varchar(2)
+                  defaultValue: EN
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: loc_film
+            columns:
+              - column:
+                  name: film_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: language
+                  type: varchar(2)
+                  defaultValue: EN
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: descrition
+                  type: varchar(2000)
+        - createTable:
+            tableName: log
+            columns:
+              - column:
+                  name: log_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: film_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+              - column:
+                  name: genre_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+              - column:
+                  name: action
+                  type: varchar(50)
+              - column:
+                  name: date
+                  type: date
+        - createTable:
+            tableName: film_genre
+            columns:
+              - column:
+                  name: film_id
+                  type: bigint
+              - column:
+                  name: genre_id
+                  type: bigint
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: film
+            constraintName: fk_film_user
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: user_id
+            referencedTableName: user
+        - addForeignKeyConstraint:
+            baseColumnNames: genre_id
+            baseTableName: loc_genre
+            constraintName: fk_loc_genre_genre
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: genre_id
+            referencedTableName: genre
+        - addForeignKeyConstraint:
+            baseColumnNames: film_id
+            baseTableName: loc_film
+            constraintName: fk_loc_film_film
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: film_id
+            referencedTableName: film
+        - addForeignKeyConstraint:
+            baseColumnNames: film_id
+            baseTableName: film_genre
+            constraintName: fk_film_genre_film
+            onDelete: NO ACTION
+            onUpdate: CASCADE
+            referencedColumnNames: film_id
+            referencedTableName: film
+        - addForeignKeyConstraint:
+            baseColumnNames: genre_id
+            baseTableName: film_genre
+            constraintName: fk_film_genre_genre
+            onDelete: NO ACTION
+            onUpdate: CASCADE
+            referencedColumnNames: genre_id
+            referencedTableName: genre

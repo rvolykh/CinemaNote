@@ -1,0 +1,23 @@
+package com.pikaso.home.cinemanote.view;
+
+import org.jsondoc.core.annotation.ApiObject;
+import org.jsondoc.core.annotation.ApiObjectField;
+
+import lombok.Data;
+
+/**
+ * {@link User} update DTO
+ * @author pikaso
+ */
+@Data
+@ApiObject(name="UserUpdate", description="User input view object")
+public class UserUpdateDTO {
+	@ApiObjectField(description = "the user name")
+	private String name;
+	@ApiObjectField(description = "the user email")
+	private String email;
+	@ApiObjectField(description = "the user password")
+	private String password;
+	@ApiObjectField(description = "the user language")
+	private String language;
+}
