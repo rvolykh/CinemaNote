@@ -29,7 +29,7 @@ public class ErrorMessage {
 	}
 	
 	public enum Code {
-		NONE_EXISTING_ID(101), NOT_FOUND(102);
+		NONE_EXISTING_ID(101), NOT_FOUND(102), BAD_REQUEST(103);
 		
 		private final int code;
 		

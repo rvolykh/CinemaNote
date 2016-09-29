@@ -22,12 +22,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pikaso.home.cinemanote.entity.Film;
+import com.pikaso.home.cinemanote.entity.LocalizedFilm;
+import com.pikaso.home.cinemanote.exception.BadRequestException;
 import com.pikaso.home.cinemanote.exception.CinemaNoteSelectException;
 import com.pikaso.home.cinemanote.exception.CinemaNoteUpdateException;
 import com.pikaso.home.cinemanote.exception.NotFoundException;
 import com.pikaso.home.cinemanote.manager.FilmManager;
 import com.pikaso.home.cinemanote.view.FilmInfoDTO;
 import com.pikaso.home.cinemanote.view.FilmUpdateDTO;
+import com.pikaso.home.cinemanote.view.LocalizedFilmUpdateDTO;
 
 @RestController
 @Api(description = "The film controller", name = "Film service")
@@ -49,9 +52,12 @@ public class FilmService {
 	public ResponseEntity<FilmInfoDTO> create(@ApiBodyObject @RequestBody FilmUpdateDTO filmDTO) {
 		Film film = Film.from(filmDTO);
 
-		film = filmManager.create(film);
-
-		return ResponseEntity.ok().body(film.toInfoDTO()); 
+		try {
+			film = filmManager.create(film);
+			return ResponseEntity.ok().body(film.toInfoDTO()); 
+		} catch (CinemaNoteUpdateException e) {
+			throw new BadRequestException(e.getMessage());
+		}
 	}
 
 	/**
@@ -109,4 +115,23 @@ public class FilmService {
 		return ResponseEntity.ok().body(films.stream().map(Film::toInfoDTO).collect(toList())); 
 	}
 	
+	/**
+	 * Add localization to film
+	 * @param localizationDTO film localization update DTO
+	 * @return the film
+	 */
+	@ApiMethod(description="Add new film")
+	@RequestMapping(value="/localization/{filmId}", method = RequestMethod.POST)
+	@ApiResponseObject @ResponseBody
+	public ResponseEntity<FilmInfoDTO> addLocalization(@ApiPathParam(name="filmId", description="the film id") 
+			@PathVariable Long filmId, @ApiBodyObject @RequestBody LocalizedFilmUpdateDTO localizationDTO) {
+		LocalizedFilm localization = LocalizedFilm.from(localizationDTO);
+
+		try {
+			Film film = filmManager.addLocalization(filmId, localization);
+			return ResponseEntity.ok().body(film.toInfoDTO());
+		} catch (CinemaNoteUpdateException e) {
+			throw new BadRequestException(e.getMessage());
+		}
+	}
 }

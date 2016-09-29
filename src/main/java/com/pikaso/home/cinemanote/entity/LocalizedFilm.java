@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.pikaso.home.cinemanote.view.LocalizedFilmUpdateDTO;
+
 import lombok.Data;
 
 /**
@@ -35,6 +37,15 @@ public class LocalizedFilm {
 	
 	@Column(name="description")
 	private String description;
+	
+	public static LocalizedFilm from(LocalizedFilmUpdateDTO dto){
+		LocalizedFilm localization = new LocalizedFilm();
+		localization.setTitle(dto.getTitle());
+		localization.setLanguage(dto.getLanguage());
+		localization.setDescription(dto.getDescription());
+		
+		return localization;
+	}
 	
 	@Data
 	public class Key implements Serializable {

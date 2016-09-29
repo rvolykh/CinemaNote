@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pikaso.home.cinemanote.exception.BadRequestException;
 import com.pikaso.home.cinemanote.exception.NotFoundException;
 import com.pikaso.home.cinemanote.view.ErrorMessage;
 
@@ -26,6 +27,15 @@ public class ErrorHandlerService {
 	@ApiResponseObject @ResponseBody 
 	public ErrorMessage handleNotFound(Exception e) {
 		return ErrorMessage.create(ErrorMessage.Code.NOT_FOUND, e.getMessage());
+	}
+	
+	@ApiMethod(description="Handle BAD_REQUEST statuses")
+	@RequestMapping("/badrequest")
+	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(BadRequestException.class)
+	@ApiResponseObject @ResponseBody 
+	public ErrorMessage handleBadRequest(Exception e) {
+		return ErrorMessage.create(ErrorMessage.Code.BAD_REQUEST, e.getMessage());
 	}
 
 }
