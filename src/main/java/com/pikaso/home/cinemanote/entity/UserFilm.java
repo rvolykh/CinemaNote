@@ -13,6 +13,10 @@ import javax.persistence.Table;
 
 import lombok.Data;
 
+/**
+ * Entity for <code>USER_FILM</code> table
+ * @author pikaso
+ */
 @Data
 @Entity @IdClass(UserFilm.Key.class)
 @Table(name="user_film")

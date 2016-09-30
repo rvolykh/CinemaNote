@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EntityScan({"com.pikaso.home.cinemanote.entity"})
 @EnableJpaRepositories({"com.pikaso.home.cinemanote"})
-@SpringBootApplication(scanBasePackages = { "com.pikaso.home.cinemanote"})
+@SpringBootApplication(scanBasePackages = {"com.pikaso.home.cinemanote"})
 public class Application {
 
 	public static void main(String[] args) {
