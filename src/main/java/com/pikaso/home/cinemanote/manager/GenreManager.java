@@ -21,7 +21,7 @@ public class GenreManager {
 	
 	@Transactional
 	public Genre create(Genre genre) throws CinemaNoteUpdateException {
-		if(Objects.nonNull(genre.getId())){
+		if(Objects.nonNull(genre.getId()) && genre.getId() > 0){
 			throw new CinemaNoteUpdateException("Cannot create object with manually set id");
 		}
 		
