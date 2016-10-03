@@ -6,9 +6,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.pikaso.home.cinemanote.view.LocalizedGenreUpdateDTO;
 
 import lombok.Data;
 
@@ -20,11 +20,11 @@ import lombok.Data;
 @Entity @IdClass(LocalizedGenre.Key.class)
 @Table(name="loc_genre")
 public class LocalizedGenre {
+	protected static final String GENRE = "genreId";
 	
 	@Id
-	@ManyToOne
-	@JoinColumn(name="genre_id")
-	private Genre genre;
+	@Column(name="genre_id")
+	private long genreId;
 	
 	@Id
 	@Column(name="language")
@@ -33,11 +33,19 @@ public class LocalizedGenre {
 	@Column(name="name")
 	private String name;
 	
+	public static LocalizedGenre from(LocalizedGenreUpdateDTO dto){
+		LocalizedGenre localizedGenre = new LocalizedGenre();
+		localizedGenre.setLanguage(dto.getLanguage());
+		localizedGenre.setName(dto.getName());
+		
+		return localizedGenre;
+	}
+	
 	@Data
-	public class Key implements Serializable {
+	public static class Key implements Serializable {
 		private static final long serialVersionUID = 1L;
 		
-		private long genre;
+		private long genreId;
 		private String language;
 	}
 }

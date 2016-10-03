@@ -12,6 +12,7 @@ import com.pikaso.home.cinemanote.entity.Genre;
 import com.pikaso.home.cinemanote.entity.LocalizedGenre;
 import com.pikaso.home.cinemanote.exception.CinemaNoteUpdateException;
 import com.pikaso.home.cinemanote.jpa.GenreRepository;
+import com.pikaso.home.cinemanote.util.LanguageUtil;
 
 @Component
 public class GenreManager {
@@ -28,6 +29,7 @@ public class GenreManager {
 		return genreRepository.save(genre);
 	}
 	
+	@Transactional
 	public Genre delete(Long genreId) throws CinemaNoteUpdateException {
 		Genre genre = genreRepository.findOne(genreId);
 		if(Objects.isNull(genre)){
@@ -39,32 +41,48 @@ public class GenreManager {
 	}
 	
 	@Transactional
-	public Genre addLocalization(LocalizedGenre localizedGenre) throws CinemaNoteUpdateException {
-		Genre genre = genreRepository.findOne(localizedGenre.getGenre().getId());
+	public Genre modify(Long genreId, Genre modifiedGenre) throws CinemaNoteUpdateException {
+		Genre genre = genreRepository.findOne(genreId);
 		if(Objects.isNull(genre)){
-			throw new CinemaNoteUpdateException("Cannot save localized genre with non existing genre");
+			throw new CinemaNoteUpdateException("Cannot modify non existing genre " + genreId);
 		}
-		localizedGenre.setGenre(genre);
+		genre.editFrom(modifiedGenre);
+		
+		return genreRepository.save(genre);
+	}
+	
+	@Transactional
+	public Genre addLocalization(Long genreId, LocalizedGenre localizedGenre) throws CinemaNoteUpdateException {
+		Genre genre = genreRepository.findOne(genreId);
+		if(Objects.isNull(genre)){
+			throw new CinemaNoteUpdateException("Cannot save localization for non existing genre");
+		}
+		localizedGenre.setGenreId(genre.getId());
 		genre.getNames().add(localizedGenre);
 		
 		return genreRepository.save(genre);
 	}
 	
+	@Transactional
 	public Genre removeLocalization(Long genreId, String language) throws CinemaNoteUpdateException {
-		Genre genre = genreRepository.getOne(genreId);
+		Genre genre = genreRepository.findOne(genreId);
 		if(Objects.isNull(genre)){
-			throw new CinemaNoteUpdateException("Cannot save localized genre with non existing genre");
+			throw new CinemaNoteUpdateException("Cannot remove localization for non existing genre");
 		}
+		int size = genre.getNames().size();
 		genre.getNames().removeIf(x->x.getLanguage().equals(language));
+		if(size == genre.getNames().size()){
+			throw new CinemaNoteUpdateException(String.format("Cannot remove non existing localization on %s "
+					+ "language. Maybe someone already deleted it.", LanguageUtil.getLanguage(language)));
+		}
 		
 		return genreRepository.save(genre);
 	}
 	
-	public List<Genre> findLocalized(String language){
-		return genreRepository.findByNamesLanguage(language);
-	}
-	
-	public List<Genre> findAll(){
-		return genreRepository.findAll();
+	public List<Genre> findLocalized(String language) {
+		List<Genre> genres = genreRepository.findAll();
+		genres.forEach(x->x.localize(language));
+		
+		return genres;
 	}
 }
