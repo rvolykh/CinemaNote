@@ -30,17 +30,6 @@ public class GenreManager {
 	}
 	
 	@Transactional
-	public Genre delete(Long genreId) throws CinemaNoteUpdateException {
-		Genre genre = genreRepository.findOne(genreId);
-		if(Objects.isNull(genre)){
-			throw new CinemaNoteUpdateException("Cannot delete non existing genre " + genreId);
-		}
-		genreRepository.delete(genre);
-		
-		return genre;
-	}
-	
-	@Transactional
 	public Genre modify(Long genreId, Genre modifiedGenre) throws CinemaNoteUpdateException {
 		Genre genre = genreRepository.findOne(genreId);
 		if(Objects.isNull(genre)){
@@ -49,6 +38,17 @@ public class GenreManager {
 		genre.editFrom(modifiedGenre);
 		
 		return genreRepository.save(genre);
+	}
+	
+	@Transactional
+	public Genre delete(Long genreId) throws CinemaNoteUpdateException {
+		Genre genre = genreRepository.findOne(genreId);
+		if(Objects.isNull(genre)){
+			throw new CinemaNoteUpdateException("Cannot delete non existing genre " + genreId);
+		}
+		genreRepository.delete(genre);
+		
+		return genre;
 	}
 	
 	@Transactional

@@ -150,7 +150,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: descrition
+                  name: description
                   type: varchar(2000)
         - createTable:
             tableName: log
