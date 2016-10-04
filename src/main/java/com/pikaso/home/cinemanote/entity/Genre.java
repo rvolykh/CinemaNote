@@ -1,8 +1,8 @@
 package com.pikaso.home.cinemanote.entity;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -36,13 +37,13 @@ public class Genre {
 	private String name;
 	
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = LocalizedGenre.GENRE)
-	private Set<LocalizedGenre> names = new HashSet<>();
+	@MapKeyColumn(name = "language", table = "loc_genre")
+	private Map<String, LocalizedGenre> names = new HashMap<>();
 	
 	public void localize(String language){
-		if(Objects.nonNull(names)){
-			this.setName(names.stream().filter(x->language.equalsIgnoreCase(x.getLanguage()))
-					.map(LocalizedGenre::getName).findFirst().orElse(this.getName()));
-		}
+		Optional.ofNullable(names).ifPresent(loc -> Optional.ofNullable(names.get(language)).ifPresent((e)-> {
+				this.setName(e.getName());
+			}));
 	}
 	
 	public static Genre create(String name){

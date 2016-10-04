@@ -4,7 +4,9 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -19,6 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -65,15 +68,15 @@ public class Film {
 	private boolean confirmed;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = LocalizedFilm.FILM)
-	private Set<LocalizedFilm> localizattion = new HashSet<>();
+	@MapKeyColumn(name = "language", table = "loc_film")
+	private Map<String, LocalizedFilm> localizattion = new HashMap<>();
 	
 	public void localize(String language){
 		// Translate film information
-		Optional.ofNullable(localizattion).ifPresent(list -> list.stream().filter(x->language.equalsIgnoreCase(x.getLanguage()))
-					.findFirst().ifPresent((e)->{
-						this.setTitle(e.getTitle());
-						this.setDescription(Optional.ofNullable(e.getDescription()).orElse(this.getDescription()));
-					}));
+		Optional.ofNullable(localizattion).ifPresent(loc -> Optional.ofNullable(loc.get(language)).ifPresent((e)->{
+				this.setTitle(e.getTitle());
+				this.setDescription(Optional.ofNullable(e.getDescription()).orElse(this.getDescription()));
+			}));
 		// Translate film genres
 		Optional.ofNullable(genres).ifPresent(list -> list.stream().forEach(x->x.localize(language)));
 	}

@@ -67,7 +67,7 @@ public class FilmManager {
 				.orElseThrow(()->new CinemaNoteUpdateException("Cannot add localization to non existing film " + filmId));
 
 		localizedFilm.setFilmId(film.getId());
-		film.getLocalizattion().add(localizedFilm);
+		film.getLocalizattion().put(localizedFilm.getLanguage(), localizedFilm);
 		
 		return filmRepository.save(film);
 	}
@@ -78,7 +78,7 @@ public class FilmManager {
 				.orElseThrow(()->new CinemaNoteUpdateException("Cannot remove localization to non existing film " + filmId));
 		
 		int size = film.getLocalizattion().size();
-		film.getLocalizattion().removeIf(x->x.getLanguage().equals(language));
+		film.getLocalizattion().remove(language);
 		if(size == film.getLocalizattion().size()){
 			throw new CinemaNoteUpdateException(String.format("Cannot remove non existing localization on %s "
 					+ "language. Maybe someone already deleted it.", LanguageUtil.getLanguage(language)));

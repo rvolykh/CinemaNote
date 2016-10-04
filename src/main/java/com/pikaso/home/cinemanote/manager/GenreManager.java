@@ -58,7 +58,7 @@ public class GenreManager {
 			throw new CinemaNoteUpdateException("Cannot save localization for non existing genre");
 		}
 		localizedGenre.setGenreId(genre.getId());
-		genre.getNames().add(localizedGenre);
+		genre.getNames().put(localizedGenre.getLanguage(), localizedGenre);
 		
 		return genreRepository.save(genre);
 	}
@@ -70,7 +70,7 @@ public class GenreManager {
 			throw new CinemaNoteUpdateException("Cannot remove localization for non existing genre");
 		}
 		int size = genre.getNames().size();
-		genre.getNames().removeIf(x->x.getLanguage().equals(language));
+		genre.getNames().remove(language);
 		if(size == genre.getNames().size()){
 			throw new CinemaNoteUpdateException(String.format("Cannot remove non existing localization on %s "
 					+ "language. Maybe someone already deleted it.", LanguageUtil.getLanguage(language)));
