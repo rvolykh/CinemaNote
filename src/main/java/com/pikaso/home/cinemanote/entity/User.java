@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.pikaso.home.cinemanote.view.UserDTO;
@@ -21,8 +22,10 @@ import lombok.Data;
 @Table(name="user")
 public class User {
 	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@SequenceGenerator(
+			name="USER_SEQUENCE_GENERATOR", 
+			sequenceName="USER_SEQ")
+	@Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="USER_SEQUENCE_GENERATOR")
 	@Column(name="user_id")
 	private long id;
 	

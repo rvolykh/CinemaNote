@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -21,8 +22,11 @@ import lombok.Data;
 @Entity
 @Table(name="log")
 public class Log {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	
+	@SequenceGenerator(
+			name="LOG_SEQUENCE_GENERATOR",
+			sequenceName="LOG_SEQ")
+	@Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="LOG_SEQUENCE_GENERATOR")
 	@Column(name="log_id")
 	private long id;
 	

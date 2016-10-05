@@ -23,6 +23,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -42,8 +43,10 @@ import lombok.Data;
 @Table(name="film")
 public class Film {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@SequenceGenerator(
+			name="FILM_SEQUENCE_GENERATOR",
+			sequenceName="FILM_SEQ")
+	@Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="FILM_SEQUENCE_GENERATOR")
 	@Column(name = "film_id")
 	private long id;
 
@@ -72,10 +75,10 @@ public class Film {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = LocalizedFilm.FILM)
 	@MapKeyColumn(name = "language", table = "loc_film")
 	private Map<String, LocalizedFilm> localizattion = new HashMap<>();
-	
+
 	@Transient
 	private String language;
-	
+
 	public void localize(String language){
 		// Translate film information
 		Optional.ofNullable(localizattion).ifPresent(loc -> Optional.ofNullable(loc.get(language)).ifPresent((e)->{

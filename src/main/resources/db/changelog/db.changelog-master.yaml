@@ -232,3 +232,15 @@ databaseChangeLog:
             onUpdate: CASCADE
             referencedColumnNames: genre_id
             referencedTableName: genre
+        - createSequence:
+            sequenceName: USER_SEQ
+            cycle: false
+        - createSequence:
+            sequenceName: FILM_SEQ
+            cycle: false
+        - createSequence:
+            sequenceName: GENRE_SEQ
+            cycle: false
+        - createSequence:
+            sequenceName: LOG_SEQ
+            cycle: true
