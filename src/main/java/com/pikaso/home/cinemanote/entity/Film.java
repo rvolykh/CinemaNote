@@ -24,8 +24,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.pikaso.home.cinemanote.util.DateUtil;
+import com.pikaso.home.cinemanote.util.LanguageUtil;
 import com.pikaso.home.cinemanote.view.FilmInfoDTO;
 import com.pikaso.home.cinemanote.view.FilmUpdateDTO;
 
@@ -71,11 +73,15 @@ public class Film {
 	@MapKeyColumn(name = "language", table = "loc_film")
 	private Map<String, LocalizedFilm> localizattion = new HashMap<>();
 	
+	@Transient
+	private String language;
+	
 	public void localize(String language){
 		// Translate film information
 		Optional.ofNullable(localizattion).ifPresent(loc -> Optional.ofNullable(loc.get(language)).ifPresent((e)->{
 				this.setTitle(e.getTitle());
 				this.setDescription(Optional.ofNullable(e.getDescription()).orElse(this.getDescription()));
+				this.language = language;
 			}));
 		// Translate film genres
 		Optional.ofNullable(genres).ifPresent(list -> list.stream().forEach(x->x.localize(language)));
@@ -108,6 +114,7 @@ public class Film {
 		dto.setDescription(description);
 		dto.setGenres(genres.stream().map(Genre::toDTO).collect(toList()));
 		dto.setReleaseDate(DateUtil.toMilliseconds(releaseDate));
+		dto.setLanguage(LanguageUtil.getLanguageOrDefault(language));
 
 		return dto;
 	}

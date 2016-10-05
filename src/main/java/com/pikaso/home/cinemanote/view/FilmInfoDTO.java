@@ -24,4 +24,6 @@ public class FilmInfoDTO {
 	private Long releaseDate;
 	@ApiObjectField(description = "the film description")
 	private String description;
+	@ApiObjectField(description = "the used film note language")
+	private String language;
 }

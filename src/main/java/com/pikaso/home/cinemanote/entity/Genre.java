@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.pikaso.home.cinemanote.util.LanguageUtil;
 import com.pikaso.home.cinemanote.view.GenreDTO;
@@ -36,6 +37,9 @@ public class Genre {
 	@Column(name="name_eng")
 	private String name;
 	
+	@Transient
+	private String language;
+	
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = LocalizedGenre.GENRE)
 	@MapKeyColumn(name = "language", table = "loc_genre")
 	private Map<String, LocalizedGenre> names = new HashMap<>();
@@ -43,6 +47,7 @@ public class Genre {
 	public void localize(String language){
 		Optional.ofNullable(names).ifPresent(loc -> Optional.ofNullable(names.get(language)).ifPresent((e)-> {
 				this.setName(e.getName());
+				this.language = language;
 			}));
 	}
 	
@@ -68,16 +73,7 @@ public class Genre {
 	public GenreDTO toDTO(){
 		GenreDTO dto = new GenreDTO();
 		dto.setId(id);
-		dto.setLanguage(LanguageUtil.getDefaultLanguage()); // TODO: read from security user language
-		dto.setName(name);
-		
-		return dto;
-	}
-	
-	public GenreDTO toDTO(String language){
-		GenreDTO dto = new GenreDTO();
-		dto.setId(id);
-		dto.setLanguage(LanguageUtil.getLanguage(language));
+		dto.setLanguage(LanguageUtil.getLanguageOrDefault(language)); // TODO: read from security user language
 		dto.setName(name);
 		
 		return dto;

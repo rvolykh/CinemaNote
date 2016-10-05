@@ -1,7 +1,6 @@
 package com.pikaso.home.cinemanote.manager;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,12 +30,8 @@ public class UserManager {
 	}
 	
 	public User find(long id) throws CinemaNoteSelectException {
-		Optional<User> user = Optional.ofNullable(userRepository.findOne(id));
-		if(user.isPresent()){
-			return user.get();
-		}
-		
-		throw new CinemaNoteSelectException("Cannot find user with id " + id);
+		return userRepository.findOne(id)
+				.orElseThrow(() -> new CinemaNoteSelectException("Cannot find user with id " + id));
 	}
 	
 	public List<User> find(){

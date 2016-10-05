@@ -2,7 +2,6 @@ package com.pikaso.home.cinemanote.manager;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -38,7 +37,7 @@ public class FilmManager {
 	
 	@Transactional
 	public Film modify(long filmId, Film modifiedFilm) throws CinemaNoteUpdateException {
-		Film film = Optional.ofNullable(filmRepository.findOne(filmId))
+		Film film = filmRepository.findOne(filmId)
 				.orElseThrow(()->new CinemaNoteUpdateException("Cannot modify non existing film " + filmId));
 
 		film.editFrom(modifiedFilm);
@@ -47,7 +46,7 @@ public class FilmManager {
 	}
 	
 	public Film find(long filmId, String language) throws CinemaNoteSelectException {
-		Film film = Optional.ofNullable(filmRepository.findOne(filmId))
+		Film film = filmRepository.findOne(filmId)
 				.orElseThrow(()->new CinemaNoteSelectException("Cannot find film with id " + filmId));
 		film.localize(language);
 		
@@ -63,7 +62,7 @@ public class FilmManager {
 	
 	@Transactional
 	public Film addLocalization(long filmId, LocalizedFilm localizedFilm) throws CinemaNoteUpdateException {
-		Film film = Optional.ofNullable(filmRepository.findOne(filmId))
+		Film film = filmRepository.findOne(filmId)
 				.orElseThrow(()->new CinemaNoteUpdateException("Cannot add localization to non existing film " + filmId));
 
 		localizedFilm.setFilmId(film.getId());
@@ -74,7 +73,7 @@ public class FilmManager {
 	
 	@Transactional
 	public Film removeLocalization(long filmId, String language) throws CinemaNoteUpdateException {
-		Film film = Optional.ofNullable(filmRepository.findOne(filmId))
+		Film film = filmRepository.findOne(filmId)
 				.orElseThrow(()->new CinemaNoteUpdateException("Cannot remove localization to non existing film " + filmId));
 		
 		int size = film.getLocalizattion().size();
@@ -89,10 +88,10 @@ public class FilmManager {
 	
 	@Transactional
 	public Film addGenre(long filmId, long genreId) throws CinemaNoteUpdateException {
-		Film film = Optional.ofNullable(filmRepository.findOne(filmId))
+		Film film = filmRepository.findOne(filmId)
 				.orElseThrow(()->new CinemaNoteUpdateException("Cannot add genre to non existing film " + filmId));
 		
-		Genre genre = Optional.ofNullable(genreRepository.findOne(genreId))
+		Genre genre = genreRepository.findOne(genreId)
 				.orElseThrow(()->new CinemaNoteUpdateException("Cannot add to film the non existing genre " + genreId));
 		
 		film.getGenres().add(genre);
@@ -102,10 +101,10 @@ public class FilmManager {
 	
 	@Transactional
 	public Film removeGenre(long filmId, long genreId) throws CinemaNoteUpdateException {
-		Film film = Optional.ofNullable(filmRepository.findOne(filmId))
+		Film film = filmRepository.findOne(filmId)
 				.orElseThrow(()->new CinemaNoteUpdateException("Cannot add genre to non existing film " + filmId));
 		
-		Genre genre = Optional.ofNullable(genreRepository.findOne(filmId))
+		Genre genre = genreRepository.findOne(filmId)
 				.orElseThrow(()->new CinemaNoteUpdateException("Cannot add to film the non existing genre " + genreId));
 		
 		film.getGenres().remove(genre);

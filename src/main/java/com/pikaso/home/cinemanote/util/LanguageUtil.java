@@ -17,10 +17,11 @@ import com.neovisionaries.i18n.LanguageCode;
  */
 public class LanguageUtil {
 	private static final LanguageCode defaultLanguage = LanguageCode.en;
+	private static final String UNDEFINED = "undefined";
 
 	public static String getLanguage(String code){
-		LanguageCode lang = LanguageCode.getByCodeIgnoreCase(code);
-		return lang.getName();
+		return Optional.ofNullable(LanguageCode.getByCodeIgnoreCase(code))
+				.map(LanguageCode::getName).orElse(UNDEFINED);
 	}
 
 	public static List<String> getCodes(){
@@ -46,5 +47,16 @@ public class LanguageUtil {
 	
 	public static String getDefaultLanguage(){
 		return defaultLanguage.getName();
+	}
+	
+	public static String getLanguageOrDefault(String code){
+		if(StringUtils.isNoneEmpty(code)){
+			String lang = getLanguage(code);
+			if(!lang.equalsIgnoreCase(UNDEFINED)){
+				return lang;
+			}
+		}
+		
+		return getDefaultLanguage();
 	}
 }

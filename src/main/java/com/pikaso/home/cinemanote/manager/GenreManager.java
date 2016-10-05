@@ -31,10 +31,9 @@ public class GenreManager {
 	
 	@Transactional
 	public Genre modify(Long genreId, Genre modifiedGenre) throws CinemaNoteUpdateException {
-		Genre genre = genreRepository.findOne(genreId);
-		if(Objects.isNull(genre)){
-			throw new CinemaNoteUpdateException("Cannot modify non existing genre " + genreId);
-		}
+		Genre genre = genreRepository.findOne(genreId)
+				.orElseThrow(()->new CinemaNoteUpdateException("Cannot modify non existing genre " + genreId));
+		
 		genre.editFrom(modifiedGenre);
 		
 		return genreRepository.save(genre);
@@ -42,10 +41,9 @@ public class GenreManager {
 	
 	@Transactional
 	public Genre delete(Long genreId) throws CinemaNoteUpdateException {
-		Genre genre = genreRepository.findOne(genreId);
-		if(Objects.isNull(genre)){
-			throw new CinemaNoteUpdateException("Cannot delete non existing genre " + genreId);
-		}
+		Genre genre = genreRepository.findOne(genreId)
+				.orElseThrow(()->new CinemaNoteUpdateException("Cannot delete non existing genre " + genreId));
+
 		genreRepository.delete(genre);
 		
 		return genre;
@@ -53,10 +51,9 @@ public class GenreManager {
 	
 	@Transactional
 	public Genre addLocalization(Long genreId, LocalizedGenre localizedGenre) throws CinemaNoteUpdateException {
-		Genre genre = genreRepository.findOne(genreId);
-		if(Objects.isNull(genre)){
-			throw new CinemaNoteUpdateException("Cannot save localization for non existing genre");
-		}
+		Genre genre = genreRepository.findOne(genreId)
+				.orElseThrow(()->new CinemaNoteUpdateException("Cannot save localization for non existing genre"));
+
 		localizedGenre.setGenreId(genre.getId());
 		genre.getNames().put(localizedGenre.getLanguage(), localizedGenre);
 		
@@ -65,10 +62,9 @@ public class GenreManager {
 	
 	@Transactional
 	public Genre removeLocalization(Long genreId, String language) throws CinemaNoteUpdateException {
-		Genre genre = genreRepository.findOne(genreId);
-		if(Objects.isNull(genre)){
-			throw new CinemaNoteUpdateException("Cannot remove localization for non existing genre");
-		}
+		Genre genre = genreRepository.findOne(genreId)
+				.orElseThrow(()->new CinemaNoteUpdateException("Cannot remove localization for non existing genre"));
+
 		int size = genre.getNames().size();
 		genre.getNames().remove(language);
 		if(size == genre.getNames().size()){
