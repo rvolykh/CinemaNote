@@ -35,6 +35,7 @@ import com.pikaso.home.cinemanote.util.LanguageUtil;
 import com.pikaso.home.cinemanote.util.ValidatorUtil;
 import com.pikaso.home.cinemanote.view.FilmInfoDTO;
 import com.pikaso.home.cinemanote.view.FilmUpdateDTO;
+import com.pikaso.home.cinemanote.view.FilmCreateDTO;
 import com.pikaso.home.cinemanote.view.LocalizedFilmUpdateDTO;
 
 @RestController
@@ -49,15 +50,11 @@ public class FilmService {
 	@ApiMethod(description="Add new film")
 	@RequestMapping(value="/", method = RequestMethod.POST)
 	@ApiResponseObject @ResponseBody
-	public ResponseEntity<FilmInfoDTO> create(@ApiBodyObject @RequestBody FilmUpdateDTO filmDTO) {
-		Film film = Film.from(filmDTO);
+	public ResponseEntity<FilmInfoDTO> create(@ApiBodyObject @RequestBody FilmCreateDTO filmDTO) {
 
-		try {
-			film = filmManager.create(film);
-			return ResponseEntity.ok().body(film.toInfoDTO()); 
-		} catch (CinemaNoteUpdateException e) {
-			throw new BadRequestException(e.getMessage());
-		}
+		Film film = filmManager.create(filmDTO);
+		
+		return ResponseEntity.ok().body(film.toInfoDTO()); 
 	}
 
 	@ApiMethod(description="Modify film information")
@@ -67,10 +64,8 @@ public class FilmService {
 	public ResponseEntity<FilmInfoDTO> modify(@ApiPathParam(name="filmId", description="the film id") 
 	@PathVariable Long filmId, @ApiBodyObject @RequestBody FilmUpdateDTO filmDTO) {
 
-		Film film = Film.from(filmDTO);
-
 		try {
-			film = filmManager.modify(filmId, film);
+			Film film = filmManager.modify(filmId, filmDTO);
 			return ResponseEntity.ok().body(film.toInfoDTO()); 
 		} catch (CinemaNoteUpdateException e) {
 			throw new NotFoundException(e.getMessage());

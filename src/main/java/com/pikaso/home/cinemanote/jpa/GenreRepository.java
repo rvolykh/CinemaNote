@@ -17,7 +17,9 @@ public interface GenreRepository extends Repository<Genre, Long> {
 	
 	Genre save(Genre genre);
 	
-	List<Genre>  findAll();
+	List<Genre> findAll();
+	
+	List<Genre> findAll(Iterable<Long> ids);
 	
 	void delete(Genre genre);
 	

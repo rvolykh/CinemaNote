@@ -63,10 +63,9 @@ public class GenreService {
 	public ResponseEntity<GenreDTO> modify(@ApiPathParam(name = "genreId", description = "the genre id") 
 			@PathVariable Long genreId, @ApiBodyObject @RequestBody String genreName) {
 		
-		Genre genre = Genre.create(genreName);
 		try {
 			// TODO: name must be unique
-			genre = genreManager.modify(genreId, genre);
+			Genre genre = genreManager.modify(genreId, genreName);
 			
 			return ResponseEntity.ok().body(genre.toDTO()); 
 		} catch (CinemaNoteUpdateException e) {

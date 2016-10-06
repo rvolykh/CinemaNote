@@ -30,11 +30,11 @@ public class GenreManager {
 	}
 	
 	@Transactional
-	public Genre modify(Long genreId, Genre modifiedGenre) throws CinemaNoteUpdateException {
+	public Genre modify(Long genreId, String newName) throws CinemaNoteUpdateException {
 		Genre genre = genreRepository.findOne(genreId)
 				.orElseThrow(()->new CinemaNoteUpdateException("Cannot modify non existing genre " + genreId));
 		
-		genre.editFrom(modifiedGenre);
+		genre.editFrom(newName);
 		
 		return genreRepository.save(genre);
 	}

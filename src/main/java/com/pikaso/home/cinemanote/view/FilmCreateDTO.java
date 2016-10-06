@@ -2,10 +2,10 @@ package com.pikaso.home.cinemanote.view;
 
 import java.util.Collection;
 
+import javax.validation.constraints.NotNull;
+
 import org.jsondoc.core.annotation.ApiObject;
 import org.jsondoc.core.annotation.ApiObjectField;
-
-import com.pikaso.home.cinemanote.entity.Film;
 
 import lombok.Data;
 
@@ -14,8 +14,9 @@ import lombok.Data;
  * @author pikaso
  */
 @Data
-@ApiObject(name="FilmUpdate", description="Film input object")
-public class FilmUpdateDTO {
+@ApiObject(name="FilmCreate", description="Film input object")
+public class FilmCreateDTO {
+	@NotNull
 	@ApiObjectField(description = "the film title")
 	private String title;
 	@ApiObjectField(description = "the film genres ids")

@@ -61,16 +61,8 @@ public class Genre {
 		return genre;
 	}
 	
-	public static Genre from(GenreDTO dto){
-		Genre genre = new Genre();
-		genre.setId(dto.getId());
-		genre.setName(dto.getName());
-		
-		return genre;
-	}
-	
-	public void editFrom(Genre genre){
-		this.setName(genre.getName());
+	public void editFrom(String name){
+		this.setName(Optional.ofNullable(name).orElse(this.name));
 	}
 	
 	public GenreDTO toDTO(){

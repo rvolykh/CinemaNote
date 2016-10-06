@@ -1,13 +1,11 @@
 package com.pikaso.home.cinemanote.entity;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,6 +27,7 @@ import javax.persistence.Transient;
 
 import com.pikaso.home.cinemanote.util.DateUtil;
 import com.pikaso.home.cinemanote.util.LanguageUtil;
+import com.pikaso.home.cinemanote.view.FilmCreateDTO;
 import com.pikaso.home.cinemanote.view.FilmInfoDTO;
 import com.pikaso.home.cinemanote.view.FilmUpdateDTO;
 
@@ -90,26 +89,30 @@ public class Film {
 		Optional.ofNullable(genres).ifPresent(list -> list.stream().forEach(x->x.localize(language)));
 	}
 
-	public void editFrom(Film film){
-		this.setTitle(film.getTitle());
-		this.setReleaseDate(film.getReleaseDate());
-		this.setDescription(film.getDescription());
-		this.setGenres(film.getGenres());
-	}
-
-	public static Film from(FilmUpdateDTO dto){
+	public static Film from(FilmCreateDTO dto, Set<Genre> genres){
 		Film film = new Film();
 		film.setTitle(dto.getTitle());
 		film.setDescription(dto.getDescription());
 		film.setReleaseDate(DateUtil.fromMilliseconds(dto.getReleaseDate()));
-		if(Objects.nonNull(dto.getGenres())){
-			film.setGenres(dto.getGenres().stream().map(Genre::from).collect(toSet()));
-		}
+		film.setGenres(genres);
 //		film.setUser("pikaso"); //TODO: read from Security
 
 		return film;
 	}
-
+	
+	/**
+	 * ATTENTION: if genres = null, than leave old value,
+	 * 		if genres = emptySet(), than clear relations
+	 * 		else set new genres
+	 */
+	public void editFrom(FilmUpdateDTO dto, Set<Genre> genres){
+		this.setTitle(Optional.ofNullable(dto.getTitle()).orElse(title));
+		this.setReleaseDate(Optional.ofNullable(dto.getReleaseDate())
+				.map(x-> DateUtil.fromMilliseconds(x)).orElse(releaseDate));
+		this.setDescription(Optional.ofNullable(dto.getDescription()).orElse(description));
+		this.setGenres(Optional.ofNullable(genres).orElse(this.genres));
+	}
+	
 	public FilmInfoDTO toInfoDTO(){
 		FilmInfoDTO dto = new FilmInfoDTO();
 		dto.setId(id);

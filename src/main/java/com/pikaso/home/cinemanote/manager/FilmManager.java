@@ -1,13 +1,15 @@
 package com.pikaso.home.cinemanote.manager;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.common.collect.Sets;
 import com.pikaso.home.cinemanote.entity.Film;
 import com.pikaso.home.cinemanote.entity.Genre;
 import com.pikaso.home.cinemanote.entity.LocalizedFilm;
@@ -16,6 +18,8 @@ import com.pikaso.home.cinemanote.exception.CinemaNoteUpdateException;
 import com.pikaso.home.cinemanote.jpa.FilmRepository;
 import com.pikaso.home.cinemanote.jpa.GenreRepository;
 import com.pikaso.home.cinemanote.util.LanguageUtil;
+import com.pikaso.home.cinemanote.view.FilmCreateDTO;
+import com.pikaso.home.cinemanote.view.FilmUpdateDTO;
 
 @Component
 public class FilmManager {
@@ -27,20 +31,25 @@ public class FilmManager {
 	private GenreRepository genreRepository;
 	
 	@Transactional
-	public Film create(Film film) throws CinemaNoteUpdateException {
-		if(Objects.nonNull(film.getId()) && film.getId() > 0){
-			throw new CinemaNoteUpdateException("Cannot save film with manually set id");
-		}
+	public Film create(FilmCreateDTO filmDTO) {
+		Set<Genre> genres = Optional.ofNullable(filmDTO.getGenreIds())
+			.map(ids -> Sets.newHashSet(genreRepository.findAll(ids))).orElse(Sets.newHashSet());
+		
+		// TODO: LOG not all genres found
+		Film film = Film.from(filmDTO, genres);
 		
 		return filmRepository.save(film);
 	}
 	
 	@Transactional
-	public Film modify(long filmId, Film modifiedFilm) throws CinemaNoteUpdateException {
+	public Film modify(long filmId, FilmUpdateDTO filmDTO) throws CinemaNoteUpdateException {
 		Film film = filmRepository.findOne(filmId)
 				.orElseThrow(()->new CinemaNoteUpdateException("Cannot modify non existing film " + filmId));
-
-		film.editFrom(modifiedFilm);
+		
+		Set<Genre> genres = Optional.ofNullable(filmDTO.getGenreIds())
+				.map(ids -> Sets.newHashSet(genreRepository.findAll(ids))).orElse(null);
+		
+		film.editFrom(filmDTO, genres);
 		
 		return filmRepository.save(film);
 	}
