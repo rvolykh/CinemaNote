@@ -17,7 +17,6 @@ public class UserUpdateDTO {
 	@NotNull
 	@ApiObjectField(description = "the user name")
 	private String name;
-	@NotNull
 	@ApiObjectField(description = "the user password")
 	private String password;
 	@ApiObjectField(description = "the user language")
