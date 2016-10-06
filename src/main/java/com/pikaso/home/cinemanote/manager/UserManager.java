@@ -9,6 +9,8 @@ import com.pikaso.home.cinemanote.entity.User;
 import com.pikaso.home.cinemanote.exception.CinemaNoteSelectException;
 import com.pikaso.home.cinemanote.exception.CinemaNoteUpdateException;
 import com.pikaso.home.cinemanote.jpa.UserRepository;
+import com.pikaso.home.cinemanote.view.UserCreateDTO;
+import com.pikaso.home.cinemanote.view.UserUpdateDTO;
 
 @Component
 public class UserManager {
@@ -16,15 +18,17 @@ public class UserManager {
 	@Autowired
 	private UserRepository userRepository;
 	
-	public User create(User user){
+	public User create(UserCreateDTO userDTO){
+		User user = User.from(userDTO);
+		
 		return userRepository.save(user);
 	}
 	
-	public User modify(long userId, User user) throws CinemaNoteUpdateException {
-		if(!userRepository.exists(userId)){
-			throw new CinemaNoteUpdateException("Cannot modify none existing user " + userId);
-		}
-		user.setId(userId);
+	public User modify(long userId, UserUpdateDTO userDTO) throws CinemaNoteUpdateException {
+		User user = userRepository.findOne(userId)
+				.orElseThrow(() -> new CinemaNoteUpdateException("Cannot modify none existing user " + userId));
+		
+		user.editFrom(userDTO);
 		
 		return userRepository.save(user);
 	}
@@ -36,5 +40,23 @@ public class UserManager {
 	
 	public List<User> find(){
 		return userRepository.findAll();
+	}
+	
+	public User changeLanguage(long userId, String language) throws CinemaNoteUpdateException {
+		User user = userRepository.findOne(userId)
+				.orElseThrow(() -> new CinemaNoteUpdateException("Cannot find user with id " + userId));
+		
+		user.setLanguage(language);
+		
+		return userRepository.save(user);
+	}
+	
+	public User changeRole(long userId, String role) throws CinemaNoteUpdateException {
+		User user = userRepository.findOne(userId)
+				.orElseThrow(() -> new CinemaNoteUpdateException("Cannot find user with id " + userId));
+		
+		user.setRole(role);
+		
+		return userRepository.save(user);
 	}
 }

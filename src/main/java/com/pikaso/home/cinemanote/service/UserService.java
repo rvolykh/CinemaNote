@@ -26,8 +26,10 @@ import com.pikaso.home.cinemanote.exception.CinemaNoteSelectException;
 import com.pikaso.home.cinemanote.exception.CinemaNoteUpdateException;
 import com.pikaso.home.cinemanote.exception.NotFoundException;
 import com.pikaso.home.cinemanote.manager.UserManager;
+import com.pikaso.home.cinemanote.util.ValidatorUtil;
 import com.pikaso.home.cinemanote.view.UserDTO;
 import com.pikaso.home.cinemanote.view.UserUpdateDTO;
+import com.pikaso.home.cinemanote.view.UserCreateDTO;
 
 /**
  * User service
@@ -42,55 +44,43 @@ public class UserService {
 	@Autowired
 	private UserManager userManager;
 
-	/**
-	 * Register user
-	 * @param userDTO user update DTO
-	 * @return the registered user
-	 */
 	@ApiMethod(description="Register new user")
 	@RequestMapping(value="/", method = RequestMethod.POST)
+	@ApiErrors(apierrors = {@ApiError(code="405", description="Language should be in ISO369-1 format")})
 	@ApiResponseObject @ResponseBody
-	public ResponseEntity<UserDTO> create(@ApiBodyObject @RequestBody UserUpdateDTO userDTO) {
-		User user = User.from(userDTO);
+	public ResponseEntity<UserDTO> create(@ApiBodyObject @RequestBody UserCreateDTO userDTO) {
+		
+		ValidatorUtil.verifyLanguage(userDTO.getLanguage());
 
-		user = userManager.create(user);
+		User user = userManager.create(userDTO);
 
 		return ResponseEntity.ok().body(user.toDTO()); 
 	}
 
-	/**
-	 * Modify user information
-	 * @param userId the user id to modify
-	 * @param userDTO user update DTO
-	 * @return the updated user
-	 */
 	@ApiMethod(description="Modify user information")
 	@RequestMapping(value="/{userId}", method = RequestMethod.PUT)
-	@ApiErrors(apierrors = {@ApiError(code="404", description="User with given id not found")})
+	@ApiErrors(apierrors = {@ApiError(code="404", description="User with given id not found"),
+			@ApiError(code="405", description="Language should be in ISO369-1 format")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<UserDTO> modify(@ApiPathParam(name="userId", description="the user id") 
-	@PathVariable Long userId, @ApiBodyObject @RequestBody UserUpdateDTO userDTO) {
-
-		User user = User.from(userDTO);
+			@PathVariable Long userId, @ApiBodyObject @RequestBody UserUpdateDTO userDTO) {
+		
+		ValidatorUtil.verifyLanguage(userDTO.getLanguage());
 
 		try {
-			user = userManager.modify(userId, user);
+			User user = userManager.modify(userId, userDTO);
 			return ResponseEntity.ok().body(user.toDTO()); 
 		} catch (CinemaNoteUpdateException e) {
 			throw new NotFoundException(e.getMessage());
 		}
 	}
 
-	/**
-	 * Find user by id
-	 * @param userId the user id to find
-	 * @return found user
-	 */
 	@ApiMethod(description="Find user by id")
 	@RequestMapping(value="/{userId}", method=RequestMethod.GET)
 	@ApiErrors(apierrors = {@ApiError(code="404", description="User with given id not found")})
 	@ApiResponseObject @ResponseBody
-	public ResponseEntity<UserDTO> findById(@ApiPathParam(name="userId", description="the user id") @PathVariable Long userId) {
+	public ResponseEntity<UserDTO> findById(@ApiPathParam(name="userId", description="the user id") 
+			@PathVariable Long userId) {
 
 		try {
 			User user = userManager.find(userId);
@@ -100,10 +90,6 @@ public class UserService {
 		}
 	}
 
-	/**
-	 * Find all users
-	 * @return found users
-	 */
 	@ApiMethod(description="Find all users")
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	@ApiResponseObject @ResponseBody
@@ -111,5 +97,41 @@ public class UserService {
 		List<User> users = userManager.find();
 
 		return ResponseEntity.ok().body(users.stream().map(User::toDTO).collect(toList())); 
+	}
+	
+	@ApiMethod(description="Change user default language")
+	@RequestMapping(value="/{userId}/language", method = RequestMethod.PUT)
+	@ApiErrors(apierrors = {@ApiError(code="404", description="User with given id not found"),
+			@ApiError(code="405", description="Language should be in ISO369-1 format")})
+	@ApiResponseObject @ResponseBody
+	public ResponseEntity<UserDTO> changeLanguage(@ApiPathParam(name="userId", description="the user id") 
+			@PathVariable Long userId, @ApiBodyObject @RequestBody String language) {
+
+		ValidatorUtil.verifyLanguage(language);
+
+		try {
+			User user = userManager.changeLanguage(userId, language);
+			return ResponseEntity.ok().body(user.toDTO()); 
+		} catch (CinemaNoteUpdateException e) {
+			throw new NotFoundException(e.getMessage());
+		}
+	}
+	
+	@ApiMethod(description="Change user role")
+	@RequestMapping(value="/{userId}/role", method = RequestMethod.PUT)
+	@ApiErrors(apierrors = {@ApiError(code="404", description="User with given id not found"),
+			@ApiError(code="405", description="Input user role not exist")})
+	@ApiResponseObject @ResponseBody
+	public ResponseEntity<UserDTO> changeRole(@ApiPathParam(name="userId", description="the user id") 
+			@PathVariable Long userId, @ApiBodyObject @RequestBody String role) {
+
+		ValidatorUtil.verifyRole(role);
+
+		try {
+			User user = userManager.changeRole(userId, role);
+			return ResponseEntity.ok().body(user.toDTO()); 
+		} catch (CinemaNoteUpdateException e) {
+			throw new NotFoundException(e.getMessage());
+		}
 	}
 }

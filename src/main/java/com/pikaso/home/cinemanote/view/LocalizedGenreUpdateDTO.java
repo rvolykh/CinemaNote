@@ -12,7 +12,7 @@ import lombok.Data;
  * @author pikaso
  */
 @Data
-@ApiObject(name="LocalizedGenere", description="Genre localization input view")
+@ApiObject(name="LocalizedGenere", description="Genre localization input")
 public class LocalizedGenreUpdateDTO {
 	@NotNull
 	@ApiObjectField(description = "the language in ISO 639-1 format")

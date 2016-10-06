@@ -12,7 +12,7 @@ import lombok.Data;
  * @author pikaso
  */
 @Data
-@ApiObject(name="FilmInfo", description="Film output view object")
+@ApiObject(name="FilmInfo", description="Film output object")
 public class FilmInfoDTO {
 	@ApiObjectField(description = "the film id")
 	private Long id;

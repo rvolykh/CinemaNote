@@ -12,7 +12,7 @@ import lombok.Data;
  * @author pikaso
  */
 @Data
-@ApiObject(name="Genre", description="Genre output view")
+@ApiObject(name="Genre", description="Genre output object")
 public class GenreDTO {
 	@ApiObjectField(description = "the genre id")
 	private long id;

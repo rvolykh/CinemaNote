@@ -14,7 +14,7 @@ import lombok.Data;
  * @author pikaso
  */
 @Data
-@ApiObject(name="FilmUpdate", description="Film input view object")
+@ApiObject(name="FilmUpdate", description="Film input object")
 public class FilmUpdateDTO {
 	@NotNull
 	@ApiObjectField(description = "the film title")

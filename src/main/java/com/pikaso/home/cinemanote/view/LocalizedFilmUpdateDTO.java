@@ -12,7 +12,7 @@ import lombok.Data;
  * @author pikaso
  */
 @Data
-@ApiObject(name="LocalizedFilm", description="Film localization input view")
+@ApiObject(name="LocalizedFilm", description="Film localization input")
 public class LocalizedFilmUpdateDTO {
 	@NotNull
 	@ApiObjectField(description = "the language in ISO 639-1 format")

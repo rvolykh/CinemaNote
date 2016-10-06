@@ -12,14 +12,11 @@ import lombok.Data;
  * @author pikaso
  */
 @Data
-@ApiObject(name="UserUpdate", description="User input view object")
+@ApiObject(name="UserUpdate", description="User input object")
 public class UserUpdateDTO {
 	@NotNull
 	@ApiObjectField(description = "the user name")
 	private String name;
-	@NotNull
-	@ApiObjectField(description = "the user email")
-	private String email;
 	@NotNull
 	@ApiObjectField(description = "the user password")
 	private String password;
