@@ -55,9 +55,15 @@ public class FilmManager {
 	}
 	
 	public Film find(long filmId, String language) throws CinemaNoteSelectException {
+		Film film = findOriginal(filmId);
+		film.localize(language);
+		
+		return film;
+	}
+	
+	public Film findOriginal(long filmId) throws CinemaNoteSelectException {
 		Film film = filmRepository.findOne(filmId)
 				.orElseThrow(()->new CinemaNoteSelectException("Cannot find film with id " + filmId));
-		film.localize(language);
 		
 		return film;
 	}
