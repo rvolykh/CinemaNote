@@ -17,4 +17,5 @@ spring:
   jpa.hibernate:
     ddl-auto: none
     naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
+    use-new-id-generator-mappings: true
   h2.console.enabled: true
