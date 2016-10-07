@@ -4,8 +4,10 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,11 +19,16 @@ import com.neovisionaries.i18n.LanguageCode;
  */
 public class LanguageUtil {
 	private static final LanguageCode defaultLanguage = LanguageCode.en;
-	private static final String UNDEFINED = "undefined";
+	public static final String UNDEFINED = "undefined";
 
 	public static String getLanguage(String code){
 		return Optional.ofNullable(LanguageCode.getByCodeIgnoreCase(code))
 				.map(LanguageCode::getName).orElse(UNDEFINED);
+	}
+	
+	public static Map<String, String> getCodeLanguagePairs(){
+		return Arrays.stream(LanguageCode.values())
+				.collect(Collectors.toMap(LanguageCode::toString, LanguageCode::getName));
 	}
 
 	public static List<String> getCodes(){

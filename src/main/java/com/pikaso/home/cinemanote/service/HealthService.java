@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pikaso.home.cinemanote.manager.HealthManager;
+import com.pikaso.home.cinemanote.manager.InformationManager;
 import com.pikaso.home.cinemanote.view.PingDTO;
 
 /**
@@ -23,7 +23,7 @@ import com.pikaso.home.cinemanote.view.PingDTO;
 public class HealthService {
 
 	@Autowired
-	private HealthManager healthManager;
+	private InformationManager informationManager;
 
 	/**
 	 * Ping method
@@ -34,6 +34,6 @@ public class HealthService {
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<PingDTO> ping() {
 
-		return ResponseEntity.ok().body(healthManager.health()); 
+		return ResponseEntity.ok().body(informationManager.health()); 
 	}
 }
