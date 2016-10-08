@@ -107,9 +107,6 @@
 			<resource>
 				<directory>${project.basedir}/src/main/resources</directory>
 			</resource>
-			<resource>
-				<directory>${project.build.directory}/generated-resources</directory>
-			</resource>
 		</resources>
 		<pluginManagement>
 			<plugins>
@@ -124,66 +121,6 @@
 						<source>${java.version}</source>
 						<target>${java.version}</target>
 					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-resources-plugin</artifactId>
-					<executions>
-						<execution>
-							<id>copy-resources</id>
-							<phase>validate</phase>
-							<goals>
-								<goal>copy-resources</goal>
-							</goals>
-							<configuration>
-								<outputDirectory>${basedir}/target/wro</outputDirectory>
-								<resources>
-									<resource>
-										<directory>src/main/wro</directory>
-										<filtering>true</filtering>
-									</resource>
-								</resources>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>ro.isdc.wro4j</groupId>
-					<artifactId>wro4j-maven-plugin</artifactId>
-					<version>${plugin.wro4j.version}</version>
-					<executions>
-						<execution>
-							<phase>generate-resources</phase>
-							<goals>
-								<goal>run</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
-						<cssDestinationFolder>${project.build.directory}/generated-resources/static/css</cssDestinationFolder>
-						<jsDestinationFolder>${project.build.directory}/generated-resources/static/js</jsDestinationFolder>
-						<extraConfigFile>${basedir}/src/main/wro/wro.properties</extraConfigFile>
-						<wroFile>${project.build.directory}/wro/wro.xml</wroFile>
-						<contextFolder>${basedir}/src/main/wro</contextFolder>
-					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>org.webjars</groupId>
-							<artifactId>jquery</artifactId>
-							<version>${ui.jquery.version}</version>
-						</dependency>
-						<dependency>
-							<groupId>org.webjars</groupId>
-							<artifactId>angularjs</artifactId>
-							<version>${ui.angularjs.version}</version>
-						</dependency>
-						<dependency>
-							<groupId>org.webjars</groupId>
-							<artifactId>bootstrap</artifactId>
-							<version>${ui.bootstrap.version}</version>
-						</dependency>
-					</dependencies>
 				</plugin>
 			</plugins>
 		</pluginManagement>

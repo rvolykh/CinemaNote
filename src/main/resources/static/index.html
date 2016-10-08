@@ -1,35 +1,60 @@
 <!doctype html>
 <html>
-<head>
 <title>Cinema note</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- W3.CSS -->
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- Cinema note -->
 <link href="css/style.css" rel="stylesheet">
-<link href="css/angular-bootstrap.css" rel="stylesheet">
-<style type="text/css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<style>
+html, body, h1, h2, h3, h4, h5 {
+	font-family: "Raleway", sans-serif
+}
+
 [ng\:cloak], [ng-cloak], .ng-cloak {
 	display: none !important;
 }
 </style>
-</head>
+<body class="w3-light-grey" data-ng-app="cinemaApp">
 
-<body data-ng-app="cinemaApp">
-
-	<header>
+	<header data-ng-controller="HeaderController">
 		<div data-header-component></div>
 	</header>
-	
-	<section data-ng-controller="MainController">
-		<div data-main-component></div>
-	</section>
-	
-	<aside>
+
+	<aside data-ng-controller="AsideController">
 		<div data-aside-component></div>
 	</aside>
-	
-	<footer>
-		<div data-footer-component></div>
-	</footer>
-	
-	<script src="js/angular-bootstrap.js" type="text/javascript"></script>
-	<script src="js/hello.js"></script>
+
+	<!-- Overlay effect when opening sidenav on small screens -->
+	<div class="w3-overlay w3-hide-large w3-animate-opacity"
+		onclick="w3_close()" style="cursor: pointer" title="close side menu"
+		id="myOverlay"></div>
+
+	<article class="w3-main" style="margin-left: 300px; margin-top: 43px;">
+		<section data-ng-controller="MenuController">
+			<div data-menu-component></div>
+		</section>
+
+		<section data-ng-controller="MainController">
+			<div data-main-component></div>
+		</section>
+
+		<footer class="w3-dark-grey">
+			<p>
+				Powered by <a href="http://www.w3schools.com/w3css/default.asp"
+					target="_blank">w3.css</a>
+			</p>
+		</footer>
+	</article>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+	<script src="js/cinemanote.js"></script>
 </body>
 </html>
