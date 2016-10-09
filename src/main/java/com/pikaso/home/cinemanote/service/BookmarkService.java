@@ -30,7 +30,7 @@ import com.pikaso.home.cinemanote.view.BookmarkDTO;
 
 @RestController
 @Api(description = "Manage user bookmarks", name = "Bookmarks service")
-@ApiErrors(apierrors = {@ApiError(code="400", description="Bad request, it has malformed syntax.")})
+@ApiErrors(apierrors = {@ApiError(code="400", description="Request has malformed syntax")})
 @RequestMapping(value = "/bookmark", produces = MediaType.APPLICATION_JSON_VALUE)
 public class BookmarkService {
 
@@ -83,7 +83,7 @@ public class BookmarkService {
 	@RequestMapping(value="/{userId}/film/{filmId}", method = RequestMethod.GET)
 	@ApiErrors(apierrors = {@ApiError(code="405", description="Film or user with given id doesn't exist")})
 	@ApiResponseObject @ResponseBody
-	public ResponseEntity<BookmarkDTO> findMyByFilmId(@ApiPathParam(name = "userId", description = "friend id") @PathVariable Long userId, 
+	public ResponseEntity<BookmarkDTO> findFriendByFilmId(@ApiPathParam(name = "userId", description = "friend id") @PathVariable Long userId, 
 			@ApiPathParam(name = "filmId", description = "the film id to find") @PathVariable Long filmId) {
 
 		try {
@@ -95,10 +95,10 @@ public class BookmarkService {
 		}
 	}
 
-	@ApiMethod(description="Find friend bookmarks from public list optionally filtered by genre")
+	@ApiMethod(description="Find friend bookmark from public list optionally filtered by genre")
 	@RequestMapping(value="/{userId}/film", method = RequestMethod.GET)
 	@ApiResponseObject @ResponseBody
-	public ResponseEntity<BookmarkDTO[]> findMy(@ApiPathParam(name = "userId", description = "friend id") @PathVariable Long userId,
+	public ResponseEntity<BookmarkDTO[]> findFriend(@ApiPathParam(name = "userId", description = "friend id") @PathVariable Long userId,
 			@ApiQueryParam(name = "genre", description = "the genre id to filter")
 			@RequestParam(defaultValue = "0", required = false, name = "genre") Long genreId) {
 

@@ -26,28 +26,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pikaso.home.cinemanote.entity.Film;
 import com.pikaso.home.cinemanote.entity.LocalizedFilm;
-import com.pikaso.home.cinemanote.exception.BadRequestException;
 import com.pikaso.home.cinemanote.exception.CinemaNoteSelectException;
 import com.pikaso.home.cinemanote.exception.CinemaNoteUpdateException;
 import com.pikaso.home.cinemanote.exception.NotFoundException;
 import com.pikaso.home.cinemanote.manager.FilmManager;
 import com.pikaso.home.cinemanote.util.LanguageUtil;
 import com.pikaso.home.cinemanote.util.ValidatorUtil;
+import com.pikaso.home.cinemanote.view.FilmCreateDTO;
 import com.pikaso.home.cinemanote.view.FilmInfoDTO;
 import com.pikaso.home.cinemanote.view.FilmUpdateDTO;
-import com.pikaso.home.cinemanote.view.FilmCreateDTO;
 import com.pikaso.home.cinemanote.view.LocalizedFilmUpdateDTO;
 
 @RestController
-@Api(description = "The film controller", name = "Film service")
-@ApiErrors(apierrors = {@ApiError(code="400", description="Bad request, it has malformed syntax.")})
+@Api(name = "Film service", description = "Manage saved films")
+@ApiErrors(apierrors = {@ApiError(code="400", description="Request has malformed syntax")})
 @RequestMapping(value = "/film", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FilmService {
 
 	@Autowired
 	private FilmManager filmManager;
 	
-	@ApiMethod(description="Add new film")
+	@ApiMethod(description="Add new film's information")
 	@RequestMapping(value="/", method = RequestMethod.POST)
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<FilmInfoDTO> create(@ApiBodyObject @RequestBody FilmCreateDTO filmDTO) {
@@ -57,9 +56,9 @@ public class FilmService {
 		return ResponseEntity.ok().body(film.toInfoDTO()); 
 	}
 
-	@ApiMethod(description="Modify film information")
+	@ApiMethod(description="Modify the film's information")
 	@RequestMapping(value="/{filmId}", method = RequestMethod.PUT)
-	@ApiErrors(apierrors = {@ApiError(code="404", description="Film with given id not found")})
+	@ApiErrors(apierrors = {@ApiError(code="404", description="Film not found")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<FilmInfoDTO> modify(@ApiPathParam(name="filmId", description="the film id") 
 	@PathVariable Long filmId, @ApiBodyObject @RequestBody FilmUpdateDTO filmDTO) {
@@ -74,10 +73,11 @@ public class FilmService {
 
 	@ApiMethod(description="Find film by id")
 	@RequestMapping(value="/{filmId}", method=RequestMethod.GET)
-	@ApiErrors(apierrors = {@ApiError(code="404", description="Film with given id not found")})
+	@ApiErrors(apierrors = {@ApiError(code="404", description="Film not found"),
+			@ApiError(code="405", description="Language not in ISO639-1 format")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<FilmInfoDTO> findByIdAndLanguage(@ApiPathParam(name="filmId", description="the film id") 
-			@PathVariable Long filmId, @ApiQueryParam(name="language", description="language to use if possible") 
+			@PathVariable Long filmId, @ApiQueryParam(name="language", description="preferred language") 
 			@RequestParam(required = false) String language) {
 		
 		if (StringUtils.isEmpty(language)) {
@@ -94,8 +94,9 @@ public class FilmService {
 		}
 	}
 
-	@ApiMethod(description="Find all films")
+	@ApiMethod(description="Find films")
 	@RequestMapping(value="/", method=RequestMethod.GET)
+	@ApiErrors(apierrors = {@ApiError(code="405", description="Language in ISO639-1 format")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<List<FilmInfoDTO>> findAll(@ApiQueryParam(name="language", description="language to use if possible") 
 	@RequestParam(required = false) String language) {
@@ -111,28 +112,31 @@ public class FilmService {
 		return ResponseEntity.ok().body(films.stream().map(Film::toInfoDTO).collect(toList())); 
 	}
 	
-	@ApiMethod(description="Add film info localization")
+	@ApiMethod(description="Add the film's localization")
 	@RequestMapping(value="/{filmId}/localization", method = RequestMethod.POST)
+	@ApiErrors(apierrors = {@ApiError(code="404", description="Film not found"), 
+			@ApiError(code="405", description="Language field not in ISO639-1 format")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<FilmInfoDTO> addLocalization(@ApiPathParam(name="filmId", description="the film id") 
 			@PathVariable Long filmId, @ApiBodyObject @RequestBody LocalizedFilmUpdateDTO localizationDTO) {
 		
 		ValidatorUtil.verifyLanguage(localizationDTO.getLanguage());
 		
-		LocalizedFilm localization = LocalizedFilm.from(localizationDTO);
 		try {
-			Film film = filmManager.addLocalization(filmId, localization);
+			Film film = filmManager.addLocalization(filmId, LocalizedFilm.from(localizationDTO));
 			return ResponseEntity.ok().body(film.toInfoDTO());
 		} catch (CinemaNoteUpdateException e) {
-			throw new BadRequestException(e.getMessage());
+			throw new NotFoundException(e.getMessage());
 		}
 	}
 	
-	@ApiMethod(description="Remove film info localization")
+	@ApiMethod(description="Remove the film's localization")
 	@RequestMapping(value="/{filmId}/localization", method = RequestMethod.DELETE)
+	@ApiErrors(apierrors = {@ApiError(code="404", description="Film or localization not found"), 
+			@ApiError(code="405", description="Language not in ISO639-1 format")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<FilmInfoDTO> removeLocalization(@ApiPathParam(name="filmId", description="the film id") 
-			@PathVariable Long filmId, @ApiQueryParam(name = "language", description = "the language in ISO 639-1")
+			@PathVariable Long filmId, @ApiQueryParam(name = "language", description = "the language in ISO639-1")
 			@RequestParam(required = true) String language) {
 		
 		ValidatorUtil.verifyLanguage(language);
@@ -141,12 +145,13 @@ public class FilmService {
 			Film film = filmManager.removeLocalization(filmId, language);
 			return ResponseEntity.ok().body(film.toInfoDTO());
 		} catch (CinemaNoteUpdateException e) {
-			throw new BadRequestException(e.getMessage());
+			throw new NotFoundException(e.getMessage());
 		}
 	}
 	
 	@ApiMethod(description="Add genre to film")
 	@RequestMapping(value="/{filmId}/genre/{genreId}", method = RequestMethod.POST)
+	@ApiErrors(apierrors = {@ApiError(code="404", description="Film or genre not found")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<FilmInfoDTO> addGenre(@ApiPathParam(name="filmId", description="the film id") 
 			@PathVariable Long filmId, @ApiPathParam(name="genreId", description="the genre id") 
@@ -156,12 +161,13 @@ public class FilmService {
 			Film film = filmManager.addGenre(filmId, genreId);
 			return ResponseEntity.ok().body(film.toInfoDTO());
 		} catch (CinemaNoteUpdateException e) {
-			throw new BadRequestException(e.getMessage());
+			throw new NotFoundException(e.getMessage());
 		}
 	}
 	
 	@ApiMethod(description="Remove genre from film")
 	@RequestMapping(value="/{filmId}/genre/{genreId}", method = RequestMethod.DELETE)
+	@ApiErrors(apierrors = {@ApiError(code="404", description="Film or genre not found")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<FilmInfoDTO> removeGenre(@ApiPathParam(name="filmId", description="the film id") 
 			@PathVariable Long filmId, @ApiPathParam(name="genreId", description="the genre id") 
@@ -171,7 +177,7 @@ public class FilmService {
 			Film film = filmManager.removeGenre(filmId, genreId);
 			return ResponseEntity.ok().body(film.toInfoDTO());
 		} catch (CinemaNoteUpdateException e) {
-			throw new BadRequestException(e.getMessage());
+			throw new NotFoundException(e.getMessage());
 		}
 	}
 }

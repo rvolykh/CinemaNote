@@ -10,7 +10,7 @@ import org.jsondoc.core.annotation.ApiObjectField;
 import lombok.Data;
 
 /**
- * {@link Film} update DTO
+ * {@link Film} create DTO
  * @author pikaso
  */
 @Data

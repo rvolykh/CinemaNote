@@ -1,7 +1,7 @@
 package com.pikaso.home.cinemanote.exception;
 
 /**
- * Response code: NOT_FOUND 
+ * Response code: NOT_FOUND (404)
  * @author pikaso
  *
  */

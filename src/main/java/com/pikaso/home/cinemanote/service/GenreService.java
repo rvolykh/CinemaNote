@@ -26,6 +26,7 @@ import com.pikaso.home.cinemanote.entity.Genre;
 import com.pikaso.home.cinemanote.entity.LocalizedGenre;
 import com.pikaso.home.cinemanote.exception.BadRequestException;
 import com.pikaso.home.cinemanote.exception.CinemaNoteUpdateException;
+import com.pikaso.home.cinemanote.exception.NotFoundException;
 import com.pikaso.home.cinemanote.manager.GenreManager;
 import com.pikaso.home.cinemanote.util.LanguageUtil;
 import com.pikaso.home.cinemanote.util.ValidatorUtil;
@@ -33,8 +34,8 @@ import com.pikaso.home.cinemanote.view.GenreDTO;
 import com.pikaso.home.cinemanote.view.LocalizedGenreUpdateDTO;
 
 @RestController
-@Api(description = "The genre controller", name = "Genre service")
-@ApiErrors(apierrors = {@ApiError(code="400", description="Bad request, it has malformed syntax.")})
+@Api(name = "Genre service", description = "Genre managment controller")
+@ApiErrors(apierrors = {@ApiError(code="400", description="Request has malformed syntax")})
 @RequestMapping(value = "/genre", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GenreService {
 
@@ -46,10 +47,9 @@ public class GenreService {
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<GenreDTO> create(@ApiBodyObject @RequestBody String genreName) {
 		
-		Genre genre = Genre.create(genreName);
 		try {
 			// TODO: name must be unique
-			genre = genreManager.create(genre);
+			Genre genre = genreManager.create(Genre.create(genreName));
 			
 			return ResponseEntity.ok().body(genre.toDTO()); 
 		} catch (CinemaNoteUpdateException e) {
@@ -57,8 +57,9 @@ public class GenreService {
 		}
 	}
 	
-	@ApiMethod(description="Edit genre by id")
+	@ApiMethod(description="Edit the genre by id")
 	@RequestMapping(value="/{genreId}", method = RequestMethod.PUT)
+	@ApiErrors(apierrors = {@ApiError(code="404", description="Genre not found")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<GenreDTO> modify(@ApiPathParam(name = "genreId", description = "the genre id") 
 			@PathVariable Long genreId, @ApiBodyObject @RequestBody String genreName) {
@@ -69,12 +70,13 @@ public class GenreService {
 			
 			return ResponseEntity.ok().body(genre.toDTO()); 
 		} catch (CinemaNoteUpdateException e) {
-			throw new BadRequestException(e.getMessage());
+			throw new NotFoundException(e.getMessage());
 		}
 	}
 
-	@ApiMethod(description="Delete genre by id")
+	@ApiMethod(description="Delete the genre by id")
 	@RequestMapping(value="/{genreId}", method = RequestMethod.DELETE)
+	@ApiErrors(apierrors = {@ApiError(code="404", description="Genre not found")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<GenreDTO> delete(@ApiPathParam(name = "genreId", description = "the genre id") 
 			@PathVariable Long genreId) {
@@ -84,12 +86,14 @@ public class GenreService {
 			
 			return ResponseEntity.ok().body(genre.toDTO()); 
 		} catch (CinemaNoteUpdateException e) {
-			throw new BadRequestException(e.getMessage());
+			throw new NotFoundException(e.getMessage());
 		}
 	}
 	
-	@ApiMethod(description="Add localization")
+	@ApiMethod(description="Add the genre's localization")
 	@RequestMapping(value="/{genreId}/localization", method = RequestMethod.POST)
+	@ApiErrors(apierrors = {@ApiError(code="404", description="Genre not found"), 
+			@ApiError(code="405", description="Language is not in ISO639-1 format")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<GenreDTO> addLocalization(@ApiPathParam(name = "genreId", description = "the genre id") 
 			@PathVariable Long genreId, @ApiBodyObject @RequestBody LocalizedGenreUpdateDTO localizedGenreDTO) {
@@ -102,12 +106,14 @@ public class GenreService {
 			
 			return ResponseEntity.ok().body(genre.toDTO()); 
 		} catch (CinemaNoteUpdateException e) {
-			throw new BadRequestException(e.getMessage());
+			throw new NotFoundException(e.getMessage());
 		}
 	}
 	
-	@ApiMethod(description="Remove genre localization")
+	@ApiMethod(description="Remove the genre's localization")
 	@RequestMapping(value="/{genreId}/localization", method = RequestMethod.DELETE)
+	@ApiErrors(apierrors = {@ApiError(code="404", description="Genre not found or no such localization"), 
+			@ApiError(code="405", description="Language is not in ISO639-1 format")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<GenreDTO> removeLocalization(@ApiPathParam(name = "genreId", description = "the genre id") 
 			@PathVariable Long genreId, @ApiQueryParam(name = "language", description = "the language in ISO 639-1")
@@ -124,8 +130,9 @@ public class GenreService {
 		}
 	}
 	
-	@ApiMethod(description="Find all genres on given language")
+	@ApiMethod(description="Find genres")
 	@RequestMapping(value="/", method = RequestMethod.GET)
+	@ApiErrors(apierrors = {@ApiError(code="405", description="Language is not in ISO639-1 format")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<GenreDTO[]> findByLocalization(@ApiQueryParam(name = "language", description = "the language in ISO 639-1")
 			@RequestParam(required = false) String language) {

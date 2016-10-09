@@ -1,7 +1,7 @@
 package com.pikaso.home.cinemanote.exception;
 
 /**
- * Response code: BAD_REQUEST 
+ * Response code: BAD_REQUEST (405)
  * @author pikaso
  *
  */

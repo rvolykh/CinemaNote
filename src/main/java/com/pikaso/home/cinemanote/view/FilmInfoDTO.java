@@ -8,7 +8,7 @@ import org.jsondoc.core.annotation.ApiObjectField;
 import lombok.Data;
 
 /**
- * Short {@link Film} DTO
+ * {@link Film} short info DTO
  * @author pikaso
  */
 @Data

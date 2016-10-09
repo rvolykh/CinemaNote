@@ -8,7 +8,7 @@ import com.pikaso.home.cinemanote.entity.Bookmark;
 import lombok.Data;
 
 /**
- * {@link Bookmark} create DTO
+ * {@link Bookmark} DTO
  * @author pikaso
  */
 @Data

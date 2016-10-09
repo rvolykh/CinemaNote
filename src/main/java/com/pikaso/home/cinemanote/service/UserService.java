@@ -36,8 +36,8 @@ import com.pikaso.home.cinemanote.view.UserCreateDTO;
  * @author pikaso
  */
 @RestController
-@Api(description = "The user controller", name = "User service")
-@ApiErrors(apierrors = {@ApiError(code="400", description="Bad request, it has malformed syntax.")})
+@Api(name = "User service", description = "User managment controller")
+@ApiErrors(apierrors = {@ApiError(code="400", description="Request has malformed syntax")})
 @RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserService {
 
@@ -46,7 +46,7 @@ public class UserService {
 
 	@ApiMethod(description="Register new user")
 	@RequestMapping(value="/", method = RequestMethod.POST)
-	@ApiErrors(apierrors = {@ApiError(code="405", description="Language should be in ISO369-1 format")})
+	@ApiErrors(apierrors = {@ApiError(code="405", description="Language is not in ISO639-1 format")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<UserDTO> create(@ApiBodyObject @RequestBody UserCreateDTO userDTO) {
 		
@@ -57,10 +57,10 @@ public class UserService {
 		return ResponseEntity.ok().body(user.toDTO()); 
 	}
 
-	@ApiMethod(description="Modify user information")
+	@ApiMethod(description="Modify the user's information")
 	@RequestMapping(value="/{userId}", method = RequestMethod.PUT)
-	@ApiErrors(apierrors = {@ApiError(code="404", description="User with given id not found"),
-			@ApiError(code="405", description="Language should be in ISO369-1 format")})
+	@ApiErrors(apierrors = {@ApiError(code="404", description="User not found"),
+			@ApiError(code="405", description="Language is not in ISO639-1 format")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<UserDTO> modify(@ApiPathParam(name="userId", description="the user id") 
 			@PathVariable Long userId, @ApiBodyObject @RequestBody UserUpdateDTO userDTO) {
@@ -77,7 +77,7 @@ public class UserService {
 
 	@ApiMethod(description="Find user by id")
 	@RequestMapping(value="/{userId}", method=RequestMethod.GET)
-	@ApiErrors(apierrors = {@ApiError(code="404", description="User with given id not found")})
+	@ApiErrors(apierrors = {@ApiError(code="404", description="User not found")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<UserDTO> findById(@ApiPathParam(name="userId", description="the user id") 
 			@PathVariable Long userId) {
@@ -90,7 +90,7 @@ public class UserService {
 		}
 	}
 
-	@ApiMethod(description="Find all users")
+	@ApiMethod(description="Find users")
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<List<UserDTO>> findAll() {
@@ -99,10 +99,10 @@ public class UserService {
 		return ResponseEntity.ok().body(users.stream().map(User::toDTO).collect(toList())); 
 	}
 	
-	@ApiMethod(description="Change user default language")
+	@ApiMethod(description="Change the user's default language")
 	@RequestMapping(value="/{userId}/language", method = RequestMethod.PUT)
-	@ApiErrors(apierrors = {@ApiError(code="404", description="User with given id not found"),
-			@ApiError(code="405", description="Language should be in ISO369-1 format")})
+	@ApiErrors(apierrors = {@ApiError(code="404", description="User not found"),
+			@ApiError(code="405", description="Language is not in ISO639-1 format")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<UserDTO> changeLanguage(@ApiPathParam(name="userId", description="the user id") 
 			@PathVariable Long userId, @ApiBodyObject @RequestBody String language) {
@@ -117,10 +117,10 @@ public class UserService {
 		}
 	}
 	
-	@ApiMethod(description="Change user role")
+	@ApiMethod(description="Change the user's role")
 	@RequestMapping(value="/{userId}/role", method = RequestMethod.PUT)
-	@ApiErrors(apierrors = {@ApiError(code="404", description="User with given id not found"),
-			@ApiError(code="405", description="Input user role not exist")})
+	@ApiErrors(apierrors = {@ApiError(code="404", description="User not found"),
+			@ApiError(code="405", description="Role not exist")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<UserDTO> changeRole(@ApiPathParam(name="userId", description="the user id") 
 			@PathVariable Long userId, @ApiBodyObject @RequestBody String role) {

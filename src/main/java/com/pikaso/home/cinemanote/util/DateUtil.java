@@ -12,19 +12,10 @@ import java.util.Date;
 public final class DateUtil {
 	private DateUtil(){}
 	
-	/**
-	 * Get current time
-	 * @return now
-	 */
 	public static Date now(){
 		return toDate(LocalDateTime.now());
 	}
 	
-	/**
-	 * Get date from milliseconds
-	 * @param milliseconds
-	 * @return date if success, else null
-	 */
 	public static Date fromMilliseconds(Long milliseconds){
 		if(milliseconds != null){
 			return new Date(milliseconds);
@@ -32,11 +23,6 @@ public final class DateUtil {
 		return null;
 	}
 	
-	/**
-	 * Get milliseconds from date
-	 * @param date
-	 * @return date in milliseconds if success, else null
-	 */
 	public static Long toMilliseconds(Date date){
 		if(date != null){
 			return date.getTime();

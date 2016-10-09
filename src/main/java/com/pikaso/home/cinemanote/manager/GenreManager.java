@@ -52,7 +52,7 @@ public class GenreManager {
 	@Transactional
 	public Genre addLocalization(Long genreId, LocalizedGenre localizedGenre) throws CinemaNoteUpdateException {
 		Genre genre = genreRepository.findOne(genreId)
-				.orElseThrow(()->new CinemaNoteUpdateException("Cannot save localization for non existing genre"));
+				.orElseThrow(()->new CinemaNoteUpdateException("Cannot save localization for non existing genre " + genreId));
 
 		localizedGenre.setGenreId(genre.getId());
 		genre.getNames().put(localizedGenre.getLanguage(), localizedGenre);
@@ -63,7 +63,7 @@ public class GenreManager {
 	@Transactional
 	public Genre removeLocalization(Long genreId, String language) throws CinemaNoteUpdateException {
 		Genre genre = genreRepository.findOne(genreId)
-				.orElseThrow(()->new CinemaNoteUpdateException("Cannot remove localization for non existing genre"));
+				.orElseThrow(()->new CinemaNoteUpdateException("Cannot remove localization for non existing genre" + genreId));
 
 		int size = genre.getNames().size();
 		genre.getNames().remove(language);

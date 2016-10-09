@@ -117,10 +117,10 @@ public class FilmManager {
 	@Transactional
 	public Film removeGenre(long filmId, long genreId) throws CinemaNoteUpdateException {
 		Film film = filmRepository.findOne(filmId)
-				.orElseThrow(()->new CinemaNoteUpdateException("Cannot add genre to non existing film " + filmId));
+				.orElseThrow(()->new CinemaNoteUpdateException("Cannot remove genre from non existing film " + filmId));
 		
-		Genre genre = genreRepository.findOne(filmId)
-				.orElseThrow(()->new CinemaNoteUpdateException("Cannot add to film the non existing genre " + genreId));
+		Genre genre = genreRepository.findOne(genreId)
+				.orElseThrow(()->new CinemaNoteUpdateException("Cannot remove non existing genre " + genreId + " from film"));
 		
 		film.getGenres().remove(genre);
 		
