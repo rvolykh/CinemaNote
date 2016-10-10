@@ -19,7 +19,7 @@ import com.pikaso.home.cinemanote.view.PingDTO;
  * @author pikaso
  */
 @RestController
-@Api(description = "The ping controller", name = "Ping service")
+@Api(name = "Ping service", description = "The ping controller")
 public class HealthService {
 
 	@Autowired

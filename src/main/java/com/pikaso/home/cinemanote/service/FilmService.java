@@ -38,7 +38,7 @@ import com.pikaso.home.cinemanote.view.FilmUpdateDTO;
 import com.pikaso.home.cinemanote.view.LocalizedFilmUpdateDTO;
 
 @RestController
-@Api(name = "Film service", description = "Manage saved films")
+@Api(name = "Film service", description = "Manage films information")
 @ApiErrors(apierrors = {@ApiError(code="400", description="Request has malformed syntax")})
 @RequestMapping(value = "/film", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FilmService {

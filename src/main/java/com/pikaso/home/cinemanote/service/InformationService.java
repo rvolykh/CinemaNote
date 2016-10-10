@@ -15,7 +15,7 @@ import com.pikaso.home.cinemanote.manager.InformationManager;
 import com.pikaso.home.cinemanote.view.LanguageDTO;
 
 @RestController
-@Api(description = "The information controller", name = "Provide additional useful information")
+@Api(name = "Information service", description = "Provide additional useful information")
 @RequestMapping(value = "/information", produces = MediaType.APPLICATION_JSON_VALUE)
 public class InformationService {
 	

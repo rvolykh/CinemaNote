@@ -17,7 +17,7 @@ public interface UserRepository extends Repository<User, Long> {
 	
 	User save(User user);
 	
-	List<User>  findAll();
+	List<User> findAll();
 	
 	void delete(User user);
 	

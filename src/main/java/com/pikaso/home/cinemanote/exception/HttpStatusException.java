@@ -1,7 +1,7 @@
 package com.pikaso.home.cinemanote.exception;
 
 /**
- * Main Error handler
+ * Main HTTP Error handler
  * @author pikaso
  */
 public class HttpStatusException extends RuntimeException {

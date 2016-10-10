@@ -29,7 +29,7 @@ import com.pikaso.home.cinemanote.view.BookmarkCreateDTO;
 import com.pikaso.home.cinemanote.view.BookmarkDTO;
 
 @RestController
-@Api(description = "Manage user bookmarks", name = "Bookmarks service")
+@Api(name = "Bookmarks service", description = "Manage user bookmarks")
 @ApiErrors(apierrors = {@ApiError(code="400", description="Request has malformed syntax")})
 @RequestMapping(value = "/bookmark", produces = MediaType.APPLICATION_JSON_VALUE)
 public class BookmarkService {

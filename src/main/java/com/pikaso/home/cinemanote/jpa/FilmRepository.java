@@ -17,7 +17,7 @@ public interface FilmRepository extends Repository<Film, Long> {
 	
 	Film save(Film film);
 	
-	List<Film>  findAll();
+	List<Film> findAll();
 	
 	void delete(Film film);
 	

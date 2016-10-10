@@ -13,5 +13,6 @@ import com.pikaso.home.cinemanote.entity.Bookmark;
 public interface BookmarkRepository extends JpaRepository<Bookmark, Bookmark.Key> {
 	
 	List<Bookmark> findByUserId(Long userId);
+	
 	List<Bookmark> findByUserIdAndFilmGenresId(Long userId, Long genreId);
 }
