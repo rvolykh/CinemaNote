@@ -153,37 +153,6 @@ databaseChangeLog:
                   name: description
                   type: varchar(2000)
         - createTable:
-            tableName: log
-            columns:
-              - column:
-                  name: log_id
-                  type: bigint
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: film_id
-                  type: bigint
-                  constraints:
-                    nullable: true
-              - column:
-                  name: genre_id
-                  type: bigint
-                  constraints:
-                    nullable: true
-              - column:
-                  name: user_id
-                  type: bigint
-                  constraints:
-                    nullable: true
-              - column:
-                  name: action
-                  type: varchar(50)
-              - column:
-                  name: date
-                  type: date
-        - createTable:
             tableName: film_genre
             columns:
               - column:
@@ -241,6 +210,3 @@ databaseChangeLog:
         - createSequence:
             sequenceName: GENRE_SEQ
             cycle: false
-        - createSequence:
-            sequenceName: LOG_SEQ
-            cycle: true
