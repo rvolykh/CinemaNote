@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pikaso.home.cinemanote.exception.BadRequestException;
+import com.pikaso.home.cinemanote.exception.GoneException;
 import com.pikaso.home.cinemanote.exception.NotFoundException;
 import com.pikaso.home.cinemanote.view.ErrorMessage;
 
@@ -26,7 +27,7 @@ public class ErrorHandlerService {
 	@ExceptionHandler(NotFoundException.class)
 	@ApiResponseObject @ResponseBody 
 	public ErrorMessage handleNotFound(Exception e) {
-		return ErrorMessage.create(ErrorMessage.Code.NOT_FOUND, e.getMessage());
+		return ErrorMessage.create(HttpStatus.NOT_FOUND, e.getMessage());
 	}
 	
 	@ApiMethod(description="Handle BAD_REQUEST statuses")
@@ -35,7 +36,16 @@ public class ErrorHandlerService {
 	@ExceptionHandler(BadRequestException.class)
 	@ApiResponseObject @ResponseBody 
 	public ErrorMessage handleBadRequest(Exception e) {
-		return ErrorMessage.create(ErrorMessage.Code.BAD_REQUEST, e.getMessage());
+		return ErrorMessage.create(HttpStatus.BAD_REQUEST, e.getMessage());
+	}
+	
+	@ApiMethod(description="Handle GONE statuses")
+	@RequestMapping("/gone")
+	@ResponseStatus(value=HttpStatus.GONE)
+	@ExceptionHandler(GoneException.class)
+	@ApiResponseObject @ResponseBody 
+	public ErrorMessage handleGone(Exception e) {
+		return ErrorMessage.create(HttpStatus.GONE, "Bad server configuration. " + e.getMessage());
 	}
 
 }

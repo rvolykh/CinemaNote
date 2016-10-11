@@ -1,3 +1,4 @@
+log.file.path: logs\cinemanote_app.log
 
 server:
   port: 8080
@@ -19,3 +20,10 @@ spring:
     naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
     use-new-id-generator-mappings: true
   h2.console.enabled: true
+
+logging:
+  file: ${log.file.path}
+  level:
+    com.pikaso.home.cinemanote: DEBUG
+    org.springframework.web: INFO
+    org.hibernate: WARN

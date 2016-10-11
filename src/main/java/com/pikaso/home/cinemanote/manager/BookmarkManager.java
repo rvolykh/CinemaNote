@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,7 @@ import com.pikaso.home.cinemanote.view.BookmarkDTO;
 
 @Component
 public class BookmarkManager {
+	private static final Logger log = LoggerFactory.getLogger(BookmarkManager.class);
 	private static final String SELECT_EMSG_TEMPLATE = "Cannot find film %s for user %s";
 	
 	@Autowired
@@ -47,6 +50,8 @@ public class BookmarkManager {
 		}
 		
 		Bookmark bookmark = Bookmark.from(bookmarkDTO, user, film);
+		
+		log.info("User {} add to bookmarks film {}", user.getName(), film.getTitle());// TODO: active user name
 		
 		return bookmarkRepository.save(bookmark)
 				.toDTO();

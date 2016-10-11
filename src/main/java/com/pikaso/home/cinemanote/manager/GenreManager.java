@@ -5,6 +5,8 @@ import java.util.Objects;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,7 @@ import com.pikaso.home.cinemanote.util.LanguageUtil;
 
 @Component
 public class GenreManager {
+	private static final Logger log = LoggerFactory.getLogger(GenreManager.class);
 	
 	@Autowired
 	private GenreRepository genreRepository;
@@ -26,6 +29,8 @@ public class GenreManager {
 			throw new CinemaNoteUpdateException("Cannot create object with manually set id");
 		}
 		
+		log.info("User {} added new genre {}", "CinemaNote", genre.getName()); // TODO: read from Security
+		
 		return genreRepository.save(genre);
 	}
 	
@@ -33,6 +38,8 @@ public class GenreManager {
 	public Genre modify(Long genreId, String newName) throws CinemaNoteUpdateException {
 		Genre genre = genreRepository.findOne(genreId)
 				.orElseThrow(()->new CinemaNoteUpdateException("Cannot modify non existing genre " + genreId));
+		
+		log.info("User {} change genre {} to {}", "CinemaNote", genre.getName(), newName);
 		
 		genre.editFrom(newName);
 		
@@ -46,6 +53,8 @@ public class GenreManager {
 
 		genreRepository.delete(genre);
 		
+		log.info("User {} deleted genre {}", "CinemaNote", genre.getName());
+		
 		return genre;
 	}
 	
@@ -56,6 +65,8 @@ public class GenreManager {
 
 		localizedGenre.setGenreId(genre.getId());
 		genre.getNames().put(localizedGenre.getLanguage(), localizedGenre);
+		
+		log.info("User {} add localization {} to genre {}", "CinemaNote", LanguageUtil.getLanguage(localizedGenre.getLanguage()), genre.getName()); // TODO: read from Security
 		
 		return genreRepository.save(genre);
 	}
@@ -71,6 +82,8 @@ public class GenreManager {
 			throw new CinemaNoteUpdateException(String.format("Cannot remove non existing localization on %s "
 					+ "language. Maybe someone already deleted it.", LanguageUtil.getLanguage(language)));
 		}
+		
+		log.info("User {} removed localization {} for genre {}", "CinemaNote", LanguageUtil.getLanguage(language), genre.getName()); // TODO: read from Security
 		
 		return genreRepository.save(genre);
 	}

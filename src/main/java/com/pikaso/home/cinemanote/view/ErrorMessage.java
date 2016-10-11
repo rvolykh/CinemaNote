@@ -3,6 +3,7 @@ package com.pikaso.home.cinemanote.view;
 import org.jsondoc.core.annotation.ApiObject;
 import org.jsondoc.core.annotation.ApiObjectField;
 import org.jsondoc.core.pojo.ApiVisibility;
+import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
 
@@ -20,25 +21,11 @@ public class ErrorMessage {
 	@ApiObjectField(description = "the error message")
 	private String message;
 	
-	public static ErrorMessage create(Code code, String message){
+	public static ErrorMessage create(HttpStatus httpStatus, String message){
 		ErrorMessage result = new ErrorMessage();
-		result.code = code.getValue();
+		result.code = httpStatus.value();
 		result.message = message;
 		
 		return result;
-	}
-	
-	public enum Code {
-		NONE_EXISTING_ID(101), NOT_FOUND(102), BAD_REQUEST(103);
-		
-		private final int code;
-		
-		private Code(int code){
-			this.code = code;
-		}
-		
-		public int getValue(){
-			return this.code;
-		}
 	}
 }

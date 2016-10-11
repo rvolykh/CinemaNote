@@ -89,13 +89,13 @@ public class Film {
 		Optional.ofNullable(genres).ifPresent(list -> list.stream().forEach(x->x.localize(language)));
 	}
 
-	public static Film from(FilmCreateDTO dto, Set<Genre> genres){
+	public static Film from(FilmCreateDTO dto, Set<Genre> genres, User user){
 		Film film = new Film();
 		film.setTitle(dto.getTitle());
 		film.setDescription(dto.getDescription());
 		film.setReleaseDate(DateUtil.fromMilliseconds(dto.getReleaseDate()));
 		film.setGenres(genres);
-//		film.setUser("pikaso"); //TODO: read from Security
+		film.setUser(user);
 
 		return film;
 	}
