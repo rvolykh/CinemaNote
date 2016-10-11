@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pikaso.home.cinemanote.exception.BadRequestException;
+import com.pikaso.home.cinemanote.exception.CinemaNoteException;
 import com.pikaso.home.cinemanote.exception.CinemaNoteSelectException;
-import com.pikaso.home.cinemanote.exception.CinemaNoteUpdateException;
 import com.pikaso.home.cinemanote.manager.BookmarkManager;
 import com.pikaso.home.cinemanote.view.BookmarkCreateDTO;
 import com.pikaso.home.cinemanote.view.BookmarkDTO;
@@ -47,7 +47,23 @@ public class BookmarkService {
 			BookmarkDTO bookmark = bookmarkManager.save(bookmarkDTO);
 
 			return ResponseEntity.ok().body(bookmark); 
-		} catch (CinemaNoteUpdateException e) {
+		} catch (CinemaNoteException e) {
+			throw new BadRequestException(e.getMessage());
+		}
+	}
+	
+	@ApiMethod(description="Add new bookmark")
+	@RequestMapping(value="/{filmId}", method = RequestMethod.DELETE)
+	@ApiErrors(apierrors = {@ApiError(code="405", description="Film with given id doesn't exist or it's not in list")})
+	@ApiResponseObject @ResponseBody
+	public ResponseEntity<BookmarkDTO> remove(@ApiPathParam(name = "filmId", description = "the film id")
+			@PathVariable Long filmId) {
+
+		try {
+			BookmarkDTO bookmark = bookmarkManager.remove(filmId);
+
+			return ResponseEntity.ok().body(bookmark); 
+		} catch (CinemaNoteException e) {
 			throw new BadRequestException(e.getMessage());
 		}
 	}
