@@ -1,20 +1,28 @@
 package com.pikaso.home.cinemanote.entity;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.apache.commons.lang3.StringUtils;
-
+import com.pikaso.home.cinemanote.util.RoleUtil.Role;
+import com.pikaso.home.cinemanote.view.UserCreateDTO;
 import com.pikaso.home.cinemanote.view.UserDTO;
 import com.pikaso.home.cinemanote.view.UserUpdateDTO;
-import com.pikaso.home.cinemanote.view.UserCreateDTO;
 
 import lombok.Data;
 
@@ -49,6 +57,28 @@ public class User {
 	@Column(name="role")
 	private String role;
 
+	@ManyToMany
+	@JoinTable(name = "friend", 
+			joinColumns = {@JoinColumn(name = "user_id")},
+			inverseJoinColumns = {@JoinColumn(name = "friend_id")})
+	private Set<User> myFriends = new HashSet<>();
+
+	@ManyToMany(mappedBy = "myFriends")
+	private Set<User> iAmFriendOf = new HashSet<>();
+	
+	public List<User> getFilteredFriends(Predicate<User> filter){
+		return this.getMyFriends().stream()
+				.filter(filter).collect(Collectors.toList());
+	}
+	
+	public Predicate<User> isAcceptedFriend(){
+		return this.getIAmFriendOf()::contains;
+	}
+	
+	public Predicate<User> isRequestedFriend(){
+		return isAcceptedFriend().negate();
+	}
+	
 	public static User from(UserCreateDTO dto){
 		User user = new User();
 		user.setEmail(dto.getEmail());
@@ -59,7 +89,7 @@ public class User {
 
 		return user;
 	}
-	
+
 	public void editFrom(UserUpdateDTO dto){
 		this.setLanguage(Optional.ofNullable(dto.getLanguage()).orElse(language));
 		this.setName(Optional.ofNullable(dto.getName()).orElse(name));
@@ -77,19 +107,22 @@ public class User {
 		return dto;
 	}
 
-	public enum Role {
-		USER, ADMIN;
-
-		public static Optional<Role> from(String value){
-			if(StringUtils.isNoneEmpty(value)){
-				try {
-					return Optional.of(Role.valueOf(value));
-				} catch(IllegalArgumentException ex) {
-					// return Optional.empty();
-				}
-			}
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (obj instanceof User) {
+			User user = (User) obj;
 			
-			return Optional.empty();
+			return id == user.id &&
+					Objects.equals(name, user.name) &&
+					Objects.equals(email, user.email);
 		}
+		
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name, email);
 	}
 }

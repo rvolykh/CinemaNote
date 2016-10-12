@@ -1,6 +1,10 @@
 package com.pikaso.home.cinemanote.manager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +15,10 @@ import com.pikaso.home.cinemanote.entity.User;
 import com.pikaso.home.cinemanote.exception.CinemaNoteSelectException;
 import com.pikaso.home.cinemanote.exception.CinemaNoteUpdateException;
 import com.pikaso.home.cinemanote.jpa.UserRepository;
+import com.pikaso.home.cinemanote.util.FriendFilterUtil.Filter;
 import com.pikaso.home.cinemanote.util.LanguageUtil;
 import com.pikaso.home.cinemanote.view.UserCreateDTO;
+import com.pikaso.home.cinemanote.view.UserDTO;
 import com.pikaso.home.cinemanote.view.UserUpdateDTO;
 
 @Component
@@ -73,5 +79,60 @@ public class UserManager {
 		log.info("User {} changed role {} for {}", "CinemaNote", role, user.getName()); // TODO: read from Security
 		
 		return userRepository.save(user);
+	}
+	
+	public UserDTO[] addFriend(long userId, long friendId) throws CinemaNoteUpdateException {
+//TODO: if(!userId.equals(USER.FROM.SECURITY)) throw new CinemaNoteUpdateException("access restricted");
+		Map<Long, User> users = getUsersByIds(Arrays.asList(userId, friendId));
+		
+		users.get(userId).getMyFriends().add(users.get(friendId));
+		
+		log.info("User {} added friend {}", users.get(userId).getName(),users.get(friendId).getName());
+		
+		return userRepository.save(users.values()).stream().filter(x->x.getId() == userId)
+				.flatMap(x->x.getMyFriends().stream()).map(User::toDTO).toArray(size->new UserDTO[size]);
+	}
+	
+	public UserDTO[] removeFriend(long userId, long friendId) throws CinemaNoteUpdateException {
+//TODO: if(!userId.equals(USER.FROM.SECURITY)) throw new CinemaNoteUpdateException("access restricted");
+		Map<Long, User> users = getUsersByIds(Arrays.asList(userId, friendId));
+
+		if(!users.get(userId).getMyFriends().remove(users.get(friendId))){
+			throw new CinemaNoteUpdateException("User " + users.get(friendId).getName() + " is not in your friend list");
+		}
+
+		log.info("User {} removed friend {}", users.get(userId).getName(),users.get(friendId).getName());
+
+		return userRepository.save(users.values()).stream().filter(x->x.getId() == userId)
+				.flatMap(x->x.getMyFriends().stream()).map(User::toDTO).toArray(size->new UserDTO[size]);
+	}
+	
+	public UserDTO[] getFriends(long userId, Filter filter) throws CinemaNoteSelectException {
+		User user = find(userId);
+		
+		switch (filter) {
+			case ACCEPTED:
+				return user.getFilteredFriends(user.isAcceptedFriend()).
+						stream().map(User::toDTO).toArray(size -> new UserDTO[size]);
+			case REQUESTED:
+				return user.getFilteredFriends(user.isRequestedFriend()).
+						stream().map(User::toDTO).toArray(size -> new UserDTO[size]);
+			default: // TODO: implement!
+				return user.getFilteredFriends(user.isAcceptedFriend()). 
+						stream().map(User::toDTO).toArray(size -> new UserDTO[size]);
+		}
+		
+	}
+	
+	private Map<Long, User> getUsersByIds(List<Long> ids) throws CinemaNoteUpdateException {
+		Map<Long, User> users = userRepository.findAll(ids).stream().collect(Collectors.toMap(User::getId, x->x));
+		if(users.size() != 2){
+			List<Long> unknownIds = new ArrayList<>(ids);
+			unknownIds.removeIf(users.keySet()::contains);
+
+			throw new CinemaNoteUpdateException("Cannot find users with id " + unknownIds);
+		}
+		
+		return users;
 	}
 }

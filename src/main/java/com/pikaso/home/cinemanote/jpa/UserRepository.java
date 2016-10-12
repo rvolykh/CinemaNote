@@ -17,7 +17,13 @@ public interface UserRepository extends Repository<User, Long> {
 	
 	User save(User user);
 	
+	List<User> save(Iterable<User> users);
+	
 	List<User> findAll();
+	
+	List<User> findAll(Iterable<Long> ids);
+	
+	List<User> findByMyFriendsMyFriendsId(Long id); // TODO: stoped here
 	
 	void delete(User user);
 	

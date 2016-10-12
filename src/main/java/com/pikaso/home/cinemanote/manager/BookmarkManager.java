@@ -82,7 +82,7 @@ public class BookmarkManager {
 	public BookmarkDTO findFriendByFilmId(Long friendId, Long filmId) throws CinemaNoteSelectException {
 		return Optional.ofNullable(bookmarkRepository.findOne(Bookmark.createKey(friendId, filmId)))
 				.map(Bookmark::toDTO).orElseThrow(() -> 
-				new CinemaNoteSelectException(String.format(SELECT_EMSG_TEMPLATE, filmId, friendId)));
+					new CinemaNoteSelectException(String.format(SELECT_EMSG_TEMPLATE, filmId, friendId)));
 	}
 
 	public List<BookmarkDTO> findFriend(Long friendId, Long genreId){

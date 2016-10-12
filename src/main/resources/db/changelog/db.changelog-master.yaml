@@ -161,6 +161,15 @@ databaseChangeLog:
               - column:
                   name: genre_id
                   type: bigint
+        - createTable:
+            tableName: friend
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+              - column:
+                  name: friend_id
+                  type: bigint
         - addForeignKeyConstraint:
             baseColumnNames: user_id
             baseTableName: film
