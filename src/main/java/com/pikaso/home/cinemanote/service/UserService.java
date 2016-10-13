@@ -126,7 +126,7 @@ public class UserService {
 	@ApiMethod(description="Change the user's role")
 	@RequestMapping(value="/{userId}/role", method = RequestMethod.PUT)
 	@ApiErrors(apierrors = {@ApiError(code="404", description="User not found"),
-			@ApiError(code="405", description="Role not exist")})
+			@ApiError(code="405", description="Bad role, look information service")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<UserDTO> changeRole(@ApiPathParam(name="userId", description="the user id") 
 			@PathVariable Long userId, @ApiBodyObject @RequestBody String role) {
@@ -176,7 +176,8 @@ public class UserService {
 	
 	@ApiMethod(description="Get my friends")
 	@RequestMapping(value="/me/friend", method = RequestMethod.GET)
-	@ApiErrors(apierrors = {@ApiError(code="404", description="User not found")})
+	@ApiErrors(apierrors = {@ApiError(code="404", description="User not found"),
+			@ApiError(code="405", description="Bad friend filter, look information service")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<UserDTO[]> getMyFriends(@ApiQueryParam(name = "filter", 
 			description = "look available values in Information service") @RequestParam String filter) {
@@ -193,7 +194,8 @@ public class UserService {
 	
 	@ApiMethod(description="Get friends")
 	@RequestMapping(value="/{userId}/friend", method = RequestMethod.GET)
-	@ApiErrors(apierrors = {@ApiError(code="404", description="User not found")})
+	@ApiErrors(apierrors = {@ApiError(code="404", description="User not found"),
+			@ApiError(code="405", description="Bad friend filter, look information service")})
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<UserDTO[]> getFriends(@ApiPathParam(name="userId", description="the user id") 
 			@PathVariable Long userId,
