@@ -19,7 +19,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.pikaso.home.cinemanote.util.RoleUtil.Role;
+import com.pikaso.home.cinemanote.enumeration.UserRole;
 import com.pikaso.home.cinemanote.view.UserCreateDTO;
 import com.pikaso.home.cinemanote.view.UserDTO;
 import com.pikaso.home.cinemanote.view.UserUpdateDTO;
@@ -85,7 +85,7 @@ public class User {
 		user.setLanguage(dto.getLanguage());
 		user.setName(dto.getName());
 		user.setPassword(dto.getPassword());
-		user.setRole(Role.USER.toString());
+		user.setRole(UserRole.USER.toString());
 
 		return user;
 	}

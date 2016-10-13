@@ -30,8 +30,8 @@ import com.pikaso.home.cinemanote.exception.CinemaNoteSelectException;
 import com.pikaso.home.cinemanote.exception.CinemaNoteUpdateException;
 import com.pikaso.home.cinemanote.exception.NotFoundException;
 import com.pikaso.home.cinemanote.manager.FilmManager;
+import com.pikaso.home.cinemanote.manager.Validator;
 import com.pikaso.home.cinemanote.util.LanguageUtil;
-import com.pikaso.home.cinemanote.util.ValidatorUtil;
 import com.pikaso.home.cinemanote.view.FilmCreateDTO;
 import com.pikaso.home.cinemanote.view.FilmInfoDTO;
 import com.pikaso.home.cinemanote.view.FilmUpdateDTO;
@@ -43,6 +43,9 @@ import com.pikaso.home.cinemanote.view.LocalizedFilmUpdateDTO;
 @RequestMapping(value = "/film", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FilmService {
 
+	@Autowired
+	private Validator validator;
+	
 	@Autowired
 	private FilmManager filmManager;
 	
@@ -83,7 +86,7 @@ public class FilmService {
 		if (StringUtils.isEmpty(language)) {
 			language = LanguageUtil.getDefaultCode(); // TODO: read from Security user language
 		} else {
-			ValidatorUtil.verifyLanguage(language);
+			validator.verifyLanguage(language);
 		}
 
 		try {
@@ -104,7 +107,7 @@ public class FilmService {
 		if (StringUtils.isEmpty(language)) {
 			language = LanguageUtil.getDefaultCode(); // TODO: read from Security user language
 		} else {
-			ValidatorUtil.verifyLanguage(language);
+			validator.verifyLanguage(language);
 		}
 		
 		List<Film> films = filmManager.find(language);
@@ -120,7 +123,7 @@ public class FilmService {
 	public ResponseEntity<FilmInfoDTO> addLocalization(@ApiPathParam(name="filmId", description="the film id") 
 			@PathVariable Long filmId, @ApiBodyObject @RequestBody LocalizedFilmUpdateDTO localizationDTO) {
 		
-		ValidatorUtil.verifyLanguage(localizationDTO.getLanguage());
+		validator.verifyLanguage(localizationDTO.getLanguage());
 		
 		try {
 			Film film = filmManager.addLocalization(filmId, LocalizedFilm.from(localizationDTO));
@@ -139,7 +142,7 @@ public class FilmService {
 			@PathVariable Long filmId, @ApiQueryParam(name = "language", description = "the language in ISO639-1")
 			@RequestParam(required = true) String language) {
 		
-		ValidatorUtil.verifyLanguage(language);
+		validator.verifyLanguage(language);
 
 		try {
 			Film film = filmManager.removeLocalization(filmId, language);

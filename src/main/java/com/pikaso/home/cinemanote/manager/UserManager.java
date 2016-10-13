@@ -12,10 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.pikaso.home.cinemanote.entity.User;
+import com.pikaso.home.cinemanote.enumeration.FriendFilter;
 import com.pikaso.home.cinemanote.exception.CinemaNoteSelectException;
 import com.pikaso.home.cinemanote.exception.CinemaNoteUpdateException;
 import com.pikaso.home.cinemanote.jpa.UserRepository;
-import com.pikaso.home.cinemanote.util.FriendFilterUtil.Filter;
 import com.pikaso.home.cinemanote.util.LanguageUtil;
 import com.pikaso.home.cinemanote.view.UserCreateDTO;
 import com.pikaso.home.cinemanote.view.UserDTO;
@@ -107,21 +107,16 @@ public class UserManager {
 				.flatMap(x->x.getMyFriends().stream()).map(User::toDTO).toArray(size->new UserDTO[size]);
 	}
 	
-	public UserDTO[] getFriends(long userId, Filter filter) throws CinemaNoteSelectException {
+	public UserDTO[] getFriends(long userId, FriendFilter filter) throws CinemaNoteSelectException {
 		User user = find(userId);
 		
-		switch (filter) {
-			case ACCEPTED:
-				return user.getFilteredFriends(user.isAcceptedFriend()).
-						stream().map(User::toDTO).toArray(size -> new UserDTO[size]);
-			case REQUESTED:
-				return user.getFilteredFriends(user.isRequestedFriend()).
-						stream().map(User::toDTO).toArray(size -> new UserDTO[size]);
-			default: // TODO: implement!
-				return user.getFilteredFriends(user.isAcceptedFriend()). 
-						stream().map(User::toDTO).toArray(size -> new UserDTO[size]);
-		}
+		return filter.apply(userRepository, user);
+	}
+	
+	public UserDTO[] getFriends(FriendFilter filter) throws CinemaNoteSelectException {
+		Long userId = 1L; // TODO: read from security
 		
+		return getFriends(userId, filter);
 	}
 	
 	private Map<Long, User> getUsersByIds(List<Long> ids) throws CinemaNoteUpdateException {

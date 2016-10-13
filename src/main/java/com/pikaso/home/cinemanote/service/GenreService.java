@@ -28,8 +28,8 @@ import com.pikaso.home.cinemanote.exception.BadRequestException;
 import com.pikaso.home.cinemanote.exception.CinemaNoteUpdateException;
 import com.pikaso.home.cinemanote.exception.NotFoundException;
 import com.pikaso.home.cinemanote.manager.GenreManager;
+import com.pikaso.home.cinemanote.manager.Validator;
 import com.pikaso.home.cinemanote.util.LanguageUtil;
-import com.pikaso.home.cinemanote.util.ValidatorUtil;
 import com.pikaso.home.cinemanote.view.GenreDTO;
 import com.pikaso.home.cinemanote.view.LocalizedGenreUpdateDTO;
 
@@ -39,6 +39,9 @@ import com.pikaso.home.cinemanote.view.LocalizedGenreUpdateDTO;
 @RequestMapping(value = "/genre", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GenreService {
 
+	@Autowired
+	private Validator validator;
+	
 	@Autowired
 	private GenreManager genreManager;
 
@@ -98,7 +101,7 @@ public class GenreService {
 	public ResponseEntity<GenreDTO> addLocalization(@ApiPathParam(name = "genreId", description = "the genre id") 
 			@PathVariable Long genreId, @ApiBodyObject @RequestBody LocalizedGenreUpdateDTO localizedGenreDTO) {
 
-		ValidatorUtil.verifyLanguage(localizedGenreDTO.getLanguage());
+		validator.verifyLanguage(localizedGenreDTO.getLanguage());
 		
 		LocalizedGenre localization = LocalizedGenre.from(localizedGenreDTO);
 		try {
@@ -119,7 +122,7 @@ public class GenreService {
 			@PathVariable Long genreId, @ApiQueryParam(name = "language", description = "the language in ISO 639-1")
 			@RequestParam(required = true) String language) {
 
-		ValidatorUtil.verifyLanguage(language);
+		validator.verifyLanguage(language);
 		
 		try {
 			Genre genre = genreManager.removeLocalization(genreId, language);
@@ -140,7 +143,7 @@ public class GenreService {
 		if (StringUtils.isEmpty(language)) {
 			language = LanguageUtil.getDefaultCode(); // TODO: read from Security user language
 		} else {
-			ValidatorUtil.verifyLanguage(language);
+			validator.verifyLanguage(language);
 		}
 		
 		List<Genre> genres = genreManager.findLocalized(language);

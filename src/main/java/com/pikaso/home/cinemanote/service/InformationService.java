@@ -22,7 +22,7 @@ public class InformationService {
 	@Autowired
 	private InformationManager informationManager;
 	
-	@ApiMethod(description="Find all languages")
+	@ApiMethod(description="Find available languages")
 	@RequestMapping(value="/languages", method = RequestMethod.GET)
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<LanguageDTO[]> availableLanguages(){
@@ -30,11 +30,19 @@ public class InformationService {
 		return ResponseEntity.ok().body(informationManager.getLanguages());
 	}
 	
-	@ApiMethod(description="Find all roles")
+	@ApiMethod(description="Find available roles")
 	@RequestMapping(value="/roles", method = RequestMethod.GET)
 	@ApiResponseObject @ResponseBody
 	public ResponseEntity<String[]> availableRoles(){
 		
 		return ResponseEntity.ok().body(informationManager.getRoles());
+	}
+	
+	@ApiMethod(description="Find available friend filters")
+	@RequestMapping(value="/friend/filter", method = RequestMethod.GET)
+	@ApiResponseObject @ResponseBody
+	public ResponseEntity<String[]> availableFriendFilters(){
+		
+		return ResponseEntity.ok().body(informationManager.getFriendFilters());
 	}
 }

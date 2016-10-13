@@ -23,7 +23,7 @@ public interface UserRepository extends Repository<User, Long> {
 	
 	List<User> findAll(Iterable<Long> ids);
 	
-	List<User> findByMyFriendsMyFriendsId(Long id); // TODO: stoped here
+	List<User> findByMyFriendsId(Long id);
 	
 	void delete(User user);
 	
