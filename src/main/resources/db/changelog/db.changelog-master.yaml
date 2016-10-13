@@ -210,6 +210,38 @@ databaseChangeLog:
             onUpdate: CASCADE
             referencedColumnNames: genre_id
             referencedTableName: genre
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: user_film
+            constraintName: fk_user_film_user
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: user_id
+            referencedTableName: user
+        - addForeignKeyConstraint:
+            baseColumnNames: film_id
+            baseTableName: user_film
+            constraintName: fk_user_film_film
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: film_id
+            referencedTableName: film
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: friend
+            constraintName: fk_friend_user_id_user
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: user_id
+            referencedTableName: user
+        - addForeignKeyConstraint:
+            baseColumnNames: friend_id
+            baseTableName: friend
+            constraintName: fk_friend_friend_id_user
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: user_id
+            referencedTableName: user
         - createSequence:
             sequenceName: USER_SEQ
             cycle: false
