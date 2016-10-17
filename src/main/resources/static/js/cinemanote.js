@@ -1,8 +1,8 @@
 
 angular.module('cinemaApp', [])
 .controller('HeaderController', ['$scope', '$http', function($scope, $http) {
-	$http.get('health/').then(function(response) {
-		$scope.health = response.data;
+	$http.get('information/jsondoc/').then(function(response) {
+		$scope.info = response.data;
 	})
 }])
 .directive('headerComponent', function() {
@@ -12,9 +12,7 @@ angular.module('cinemaApp', [])
 	};
 })
 .controller('AsideController', ['$scope', '$http', function($scope, $http) {
-	$http.get('health/').then(function(response) {
-		$scope.health = response.data;
-	})
+	
 }])
 .directive('asideComponent', function() {
 	return {
@@ -23,9 +21,7 @@ angular.module('cinemaApp', [])
 	};
 })
 .controller('MenuController', ['$scope', '$http', function($scope, $http) {
-	$http.get('health/').then(function(response) {
-		$scope.health = response.data;
-	})
+	
 }])
 .directive('menuComponent', function() {
 	return {

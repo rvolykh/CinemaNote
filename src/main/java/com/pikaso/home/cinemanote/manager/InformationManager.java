@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.pikaso.home.cinemanote.enumeration.FriendFilter;
@@ -15,6 +16,9 @@ import com.pikaso.home.cinemanote.view.PingDTO;
 
 @Component
 public class InformationManager {
+	
+	@Value("${jsondoc.basePath}")
+	private String jsonDocPath;
 	
 	public PingDTO health(){
 		PingDTO ping = new PingDTO();
@@ -40,6 +44,10 @@ public class InformationManager {
 	public String[] getFriendFilters(){
 		return Arrays.stream(FriendFilter.values())
 				.map(Object::toString).toArray(size -> new String[size]);
+	}
+	
+	public String getJsonDocPath(){
+		return String.format("{\"jsonDocPath\":\"%s/jsondoc-ui.html?url=%s/jsondoc#\"}", jsonDocPath, jsonDocPath);
 	}
 	
 	private LanguageDTO fetchLanguageDTO(String code, String name){

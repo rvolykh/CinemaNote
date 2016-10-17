@@ -45,4 +45,12 @@ public class InformationService {
 		
 		return ResponseEntity.ok().body(informationManager.getFriendFilters());
 	}
+	
+	@ApiMethod(description="Get REST APIs documentation")
+	@RequestMapping(value="/jsondoc", method = RequestMethod.GET)
+	@ApiResponseObject @ResponseBody
+	public ResponseEntity<String> restApi(){
+		
+		return ResponseEntity.ok().body(informationManager.getJsonDocPath());
+	}
 }

@@ -5,7 +5,7 @@ server:
   
 jsondoc:
   version: 1.0
-  basePath: http://localhost:8080
+  basePath: http://localhost:${server.port}
   packages[0]: com.pikaso.home.cinemanote.view
   packages[1]: com.pikaso.home.cinemanote.service
 
