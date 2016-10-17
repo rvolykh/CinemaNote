@@ -1,6 +1,5 @@
 package com.pikaso.home.cinemanote.util;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -32,10 +31,5 @@ public final class DateUtil {
 	
 	private static Date toDate(LocalDateTime localDate){
 		return Date.from(localDate.atZone(ZoneId.systemDefault()).toInstant());
-	}
-	
-	@SuppressWarnings("unused")
-	private static LocalDateTime fromDate(Date date){
-		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
 	}
 }

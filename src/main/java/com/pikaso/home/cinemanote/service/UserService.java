@@ -34,10 +34,6 @@ import com.pikaso.home.cinemanote.view.UserCreateDTO;
 import com.pikaso.home.cinemanote.view.UserDTO;
 import com.pikaso.home.cinemanote.view.UserUpdateDTO;
 
-/**
- * User service
- * @author pikaso
- */
 @RestController
 @Api(name = "User service", description = "User managment controller")
 @ApiErrors(apierrors = {@ApiError(code="400", description="Request has malformed syntax")})

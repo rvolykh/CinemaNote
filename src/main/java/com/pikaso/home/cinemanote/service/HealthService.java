@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pikaso.home.cinemanote.manager.InformationManager;
 import com.pikaso.home.cinemanote.view.PingDTO;
 
-/**
- * Simple ping service
- * @author pikaso
- */
 @RestController
 @Api(name = "Ping service", description = "The ping controller")
 public class HealthService {

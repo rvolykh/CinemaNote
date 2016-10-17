@@ -21,10 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.pikaso.home.cinemanote.exception.GoneException;
 
-/**
- * Download log file service
- * @author pikaso
- */
 @Controller
 @Api(name = "Log service", description = "Manage application logs")
 public class LogService {
