@@ -1,8 +1,12 @@
+security.user:
+  name: dev
+  password: 123
+
 log.file.path: logs\cinemanote_app.log
 
 server:
   port: 8080
-  
+
 jsondoc:
   version: 1.0
   basePath: http://localhost:${server.port}
