@@ -22,15 +22,11 @@ html, body, h1, h2, h3, h4, h5 {
 	display: none !important;
 }
 </style>
-<body class="w3-light-grey" data-ng-app="cinemaApp">
+<body class="w3-light-grey ng-cloak" data-ng-app="cinemaApp">
 
-	<header data-ng-controller="HeaderController">
-		<div data-header-component></div>
-	</header>
+	<header data-header-component></header>
 
-	<aside data-ng-controller="AsideController">
-		<div data-aside-component></div>
-	</aside>
+	<aside data-aside-component></aside>
 
 	<!-- Overlay effect when opening sidenav on small screens -->
 	<div class="w3-overlay w3-hide-large w3-animate-opacity"
@@ -38,14 +34,11 @@ html, body, h1, h2, h3, h4, h5 {
 		id="myOverlay"></div>
 
 	<article class="w3-main" style="margin-left: 300px; margin-top: 43px;">
-		<section data-ng-controller="MenuController">
-			<div data-menu-component></div>
-		</section>
+	
+		<aside data-menu-component></aside>
 
-		<section data-ng-controller="MainController">
-			<div data-main-component></div>
-		</section>
-
+		<aside data-main-component></aside>
+		
 		<footer class="w3-dark-grey">
 			<p>
 				Powered by <a href="http://www.w3schools.com/w3css/default.asp"
@@ -56,5 +49,9 @@ html, body, h1, h2, h3, h4, h5 {
 
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
 	<script src="js/cinemanote.js"></script>
+	<script src="js/cinemaHeader.js"></script>
+	<script src="js/cinemaAside.js"></script>
+	<script src="js/cinemaMenu.js"></script>
+	<script src="js/cinemaMain.js"></script>
 </body>
 </html>
