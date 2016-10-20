@@ -22,11 +22,11 @@ html, body, h1, h2, h3, h4, h5 {
 	<header data-header-component></header>
 
 	<!-- LOGIN PAGE -->
-	<div data-ng-if="true">
-	
+	<div data-ng-if="!authenticated">
+		<header data-login-component></header>
 	</div>
 	<!-- ELSE MAIN -->
-	<div data-ng-if="true">
+	<div data-ng-if="authenticated">
 		<aside data-aside-component></aside>
 
 		<!-- Overlay effect when opening sidenav on small screens -->
@@ -42,16 +42,20 @@ html, body, h1, h2, h3, h4, h5 {
 
 
 	<footer class="w3-dark-grey">
-		<p align="right">
-			Powered by <a href="http://www.w3schools.com/w3css/default.asp"
-				target="_blank">w3.css</a>
+		<p align="right" class="w3-margin-right">
+			<span>Powered by </span>
+			<span class="w3-padding-8"><a href="http://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></span>
+			<span class="w3-padding-8"><a href="https://angularjs.org" target="_blank">AngularJS</a></span>
+			<span class="w3-padding-8"><a href="https://spring.io" target="_blank">Spring</a></span>
 		</p>
 	</footer>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.min.js"></script>
 	<!-- AngularJS -->
 	<script src="js/cinemanote.js"></script>
 	<script src="js/cinemaHeader.js"></script>
+	<script src="js/cinemaLogin.js"></script>
 	<script src="js/cinemaAside.js"></script>
 	<script src="js/cinemaMenu.js"></script>
 	<script src="js/cinemaMain.js"></script>

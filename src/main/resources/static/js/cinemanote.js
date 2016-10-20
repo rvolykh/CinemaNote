@@ -2,22 +2,33 @@
 	'use strict';
 //	BEGIN
 
-	angular.module('cinemaApp', [])
+	angular.module('cinemaApp', [ 'ngRoute' ])
+	.config(function($routeProvider, $httpProvider) {
+		$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+	})
+	.directive('loginComponent', [function($scope, $http, $location){
+		return {
+			restrict : "A",
+			templateUrl: "../view/login.html",
+			controller: LoginController,
+			controllerAs: 'login'
+		};
+	}])
 	.directive('headerComponent', [function($scope, $http){
 		return {
-				restrict : "A",
-				templateUrl: "../view/header.html",
-				controller: HeaderController,
-				controllerAs: 'header'
-			};
+			restrict : "A",
+			templateUrl: "../view/header.html",
+			controller: HeaderController,
+			controllerAs: 'header'
+		};
 	}])
 	.directive('asideComponent', [function($scope, $http){
 		return {
-				restrict : "A",
-				templateUrl: "../view/aside.html",
-				controller: AsideController,
-				controllerAs: 'aside'
-			};
+			restrict : "A",
+			templateUrl: "../view/aside.html",
+			controller: AsideController,
+			controllerAs: 'aside'
+		};
 	}])
 	.directive('menuComponent', [function($scope, $http){
 		return {
