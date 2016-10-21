@@ -9,12 +9,18 @@
 		<div class="w3-col s8">
 			<span>Welcome, <strong>Mike</strong></span>
 			<br> 
-			<a href="#" class="w3-hover-none w3-hover-text-red w3-show-inline-block">
-				<i class="fa fa-envelope"></i></a> 
-			<a href="#" class="w3-hover-none w3-hover-text-green w3-show-inline-block">
-				<i class="fa fa-user"></i></a> 
-			<a href="#" class="w3-hover-none w3-hover-text-blue w3-show-inline-block">
-				<i class="fa fa-cog"></i></a>
+			<a href="#" class="w3-hover-none w3-hover-text-red w3-show-inline-block w3-tooltip">
+				<span style="position:absolute;left:0;bottom:22px" class="w3-text w3-tag">friends</span>
+				<i class="fa fa-users"></i>
+			</a> 
+			<a href="#" class="w3-hover-none w3-hover-text-green w3-show-inline-block w3-tooltip">
+				<span style="position:absolute;left:0;bottom:22px" class="w3-text w3-tag">profile</span>
+				<i class="fa fa-user"></i>
+			</a> 
+			<a href="" data-ng-click="aside.out()" class="w3-hover-none w3-hover-text-blue w3-show-inline-block w3-tooltip">
+				<span style="position:absolute;left:0;bottom:22px" class="w3-text w3-tag">logout</span>
+				<i class="fa fa-sign-out"></i>
+			</a>
 		</div>
 	</div>
 	<hr>

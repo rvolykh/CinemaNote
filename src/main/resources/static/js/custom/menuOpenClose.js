@@ -1,8 +1,6 @@
-// Get the DIV with overlay effect
-var overlayBg = document.getElementById("myOverlay");
-
 // Toggle between showing and hiding the sidenav, and add overlay effect
 function w3_open() {
+	var overlayBg = document.getElementById("myOverlay");
 	// Get the Sidenav
 	var mySidenav = document.getElementById("mySidenav");
 	if (mySidenav.style.display === 'block') {
@@ -19,5 +17,5 @@ function w3_close() {
 	// Get the Sidenav
 	var mySidenav = document.getElementById("mySidenav");
 	mySidenav.style.display = "none";
-	overlayBg.style.display = "none";
+	document.getElementById("myOverlay").style.display = "none";
 }

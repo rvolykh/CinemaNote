@@ -35,4 +35,11 @@ function LoginController($rootScope, $http, $location) {
 			}
 		});
 	};
+
+	self.out = function() {
+		$http.post('logout', {}).finally(function() {
+			$rootScope.authenticated = false;
+			$location.path("/");
+		});
+	}
 }

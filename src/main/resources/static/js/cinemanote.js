@@ -1,9 +1,9 @@
 (function(angular) {
 	'use strict';
 //	BEGIN
-
-	angular.module('cinemaApp', [ 'ngRoute' ])
-	.config(function($routeProvider, $httpProvider) {
+	var APPLICATION = angular.module('cinemaApp', [ 'ngRoute' ]);
+	
+	APPLICATION.config(function($routeProvider, $httpProvider) {
 		$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 	})
 	.directive('loginComponent', [function($scope, $http, $location){
