@@ -23,3 +23,18 @@ footer {
 footer p {
 	margin: 0!important;
 }
+
+.cn-padding-lr-0 {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+.cn-padding-lr-2 {
+	padding-left: 2% !important;
+	padding-right: 2% !important;
+}
+.cn-lineheight-32 {
+	line-height:32px;
+}
+.cn-lineheight-34 {
+	line-height:34px;
+}

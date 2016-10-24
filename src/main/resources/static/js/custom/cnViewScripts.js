@@ -19,3 +19,24 @@ function w3_close() {
 	mySidenav.style.display = "none";
 	document.getElementById("myOverlay").style.display = "none";
 }
+
+function slide_right(id) {
+	var elements = $('.'+id);
+	for(var i = 0; i<elements.length; i++){
+		if($(elements[i]).hasClass('w3-hide')) {
+			$(elements[i]).removeClass('w3-hide');
+			$(elements[i == elements.length-1 ? 0:i+1]).addClass('w3-hide');
+			break;
+		}
+	}
+}
+function slide_left(id) {
+	var elements = $('.'+id);
+	for(var i = 0; i<elements.length; i++){
+		if($(elements[i]).hasClass('w3-hide')) {
+			$(elements[i]).removeClass('w3-hide');
+			$(elements[i == 0 ? elements.length-1:i-1]).addClass('w3-hide');
+			break;
+		}
+	}
+}
